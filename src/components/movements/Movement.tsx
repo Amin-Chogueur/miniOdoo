@@ -15,7 +15,7 @@ export default function ToolMovementCard({
         borderBottom: `1px solid var(--border)`,
       }}
     >
-      <td className="px-4 py-2 flex gap-2">
+      <td className="px-3 py-1  gap-2">
         <Link
           href={`/movements/${movement._id}`}
           className="px-3 py-1 rounded text-white cursor-pointer"
@@ -26,7 +26,7 @@ export default function ToolMovementCard({
             border: `1px solid var(--border)`,
           }}
         >
-          {movement.employeeSignatureForReturn ? "Returned" : "Out"}
+          {movement.employeeSignatureForReturn ? "Returned" : "Taken"}
         </Link>
       </td>
       <td className="px-4 py-2">{movement.toolName}</td>

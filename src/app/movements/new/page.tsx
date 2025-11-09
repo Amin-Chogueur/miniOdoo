@@ -6,29 +6,33 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addMovement } from "@/query/movementQuery";
 import EmployeesList from "@/components/movements/EmployeesList";
+import Link from "next/link";
+
+const initialState = {
+  toolName: "",
+  toolCode: "",
+  employeeName: "",
+  takenQuantity: 1,
+  employeeSignatureForTake: "",
+  takenNote: "",
+};
 
 export default function NewMovements() {
   const route = useRouter();
-  const [tool, setTool] = useState("");
-  const [employee, setEmployee] = useState("");
-  const [signature, setSignature] = useState("");
+  const [movement, setMovement] = useState(initialState);
+  const [searchTool, setSearchTool] = useState("");
+  const [searchEmployee, setSearchEmployee] = useState("");
   const queryClient = useQueryClient();
-  function handleDiscard() {
-    setEmployee("");
-    setTool("");
-  }
 
   const addMovementMutation = useMutation({
     mutationFn: addMovement,
     onSuccess: () => {
       // ✅ Refresh movements list
       queryClient.invalidateQueries({ queryKey: ["movements"] });
+      queryClient.invalidateQueries({ queryKey: ["tools"] });
 
       // ✅ Reset fields
-      setTool("");
-      setEmployee("");
-      setSignature("");
-
+      setMovement(initialState);
       // ✅ Redirect
       route.push("/movements");
     },
@@ -40,134 +44,204 @@ export default function NewMovements() {
   // 🔹 Handle form submission
   async function handleSubmitMovement(e: FormEvent) {
     e.preventDefault();
-    if (!tool.trim() || !employee.trim() || !signature) return;
+    if (
+      !movement.toolName.trim() ||
+      !movement.employeeName.trim() ||
+      !movement.employeeSignatureForTake
+    )
+      return;
 
-    const movement = {
-      toolName: tool,
-      employeeName: employee,
-      employeeSignatureForTake: signature,
+    const newMovement = {
+      ...movement,
+      takenQunatity: 1,
       takenAt: new Date().toISOString(),
       storekeeperGivenName: "Amin",
     };
 
-    addMovementMutation.mutate(movement);
+    addMovementMutation.mutate(newMovement);
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center py-6"
-      style={{
-        backgroundColor: "var(--background)",
-        color: "var(--text-primary)",
-      }}
-    >
+    <div className="mt-3">
+      <Link href={"/movements"} className="underline text-green-600 ">
+        &larr; Back
+      </Link>
       <div
-        className="w-full max-w-2xl rounded-2xl shadow-2xl p-8 space-y-4 transition-all duration-300"
+        className="min-h-screen flex items-center justify-center py-6 "
         style={{
-          backgroundColor: "var(--surface)",
-          border: `1px solid var(--border)`,
+          backgroundColor: "var(--background)",
+          color: "var(--text-primary)",
         }}
       >
-        <h1 className="text-3xl font-bold text-center mb-6 tracking-wide">
-          Create New Movement
-        </h1>
+        <div
+          className="w-full max-w-2xl rounded-2xl shadow-2xl p-2 space-y-4 transition-all duration-300"
+          style={{
+            backgroundColor: "var(--surface)",
+            border: `1px solid var(--border)`,
+          }}
+        >
+          <h1 className="text-3xl font-bold text-center mb-6 tracking-wide">
+            Create New Movement
+          </h1>
 
-        {/* Tool Name Input */}
-        <form onSubmit={handleSubmitMovement}>
-          <div className="space-y-1">
-            <label className="text-lg font-medium">Tool Name</label>
-            <input
-              type="text"
-              required
-              placeholder="Search for a tool..."
-              value={tool}
-              onChange={(e) => setTool(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg outline-none text-base"
-              style={{
-                backgroundColor: "var(--input-bg)",
-                border: `1px solid var(--border)`,
-                color: "var(--text-primary)",
-              }}
-            />
-            {tool.length >= 3 ? (
-              <div className="mt-1">
-                <ToolList currentTool={tool} setTool={setTool} />
-              </div>
-            ) : null}
+          {/* Search input */}
+          <div className="flex gap-3">
+            <div className="space-y-1">
+              <label className="text-sm md:text-lg font-medium">
+                Search for Tool
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="ex: Debarbeuse Pm..."
+                value={searchTool}
+                onChange={(e) => setSearchTool(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  border: `1px solid var(--border)`,
+                  color: "var(--text-primary)",
+                }}
+              />
+              {searchTool.length >= 3 ? (
+                <div className="mt-1">
+                  <ToolList
+                    currentTool={searchTool}
+                    setToolData={setMovement}
+                    setSearchTool={setSearchTool}
+                  />
+                </div>
+              ) : null}
+            </div>
+
+            {/* Person Input */}
+            <div className="space-y-1">
+              <label className="text-sm md:text-lg  font-medium">
+                Search for employee
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="ex: Karim..."
+                value={searchEmployee}
+                onChange={(e) => setSearchEmployee(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  border: `1px solid var(--border)`,
+                  color: "var(--text-primary)",
+                }}
+              />
+              {/* <PersonneList currentPerson={person} /> */}
+              {searchEmployee.length >= 3 ? (
+                <div className="mt-1">
+                  <EmployeesList
+                    currentPerson={searchEmployee}
+                    setEmployee={setMovement}
+                    setSearchEmployee={setSearchEmployee}
+                  />
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          {/* Person Input */}
-          <div className="space-y-1">
-            <label className="text-lg font-medium">Person Name</label>
-            <input
-              type="text"
-              required
-              placeholder="Search for a person..."
-              value={employee}
-              onChange={(e) => setEmployee(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg outline-none text-base"
-              style={{
-                backgroundColor: "var(--input-bg)",
-                border: `1px solid var(--border)`,
-                color: "var(--text-primary)",
-              }}
-            />
-            {/* <PersonneList currentPerson={person} /> */}
-            {employee.length >= 3 ? (
-              <div className="mt-1">
-                <EmployeesList
-                  currentPerson={employee}
-                  setPerson={setEmployee}
-                />
-              </div>
-            ) : null}
-          </div>
+          {/* ----------------- Form ---------------------- */}
 
-          {/* Signature Input */}
-          <div className="space-y-2">
-            <label className="text-lg font-medium">Signature</label>
-            <input
-              type="text"
-              required
-              value={signature}
-              onChange={(e) => setSignature(e.target.value)}
-              placeholder="Enter your signature..."
-              className="w-full px-4 py-2 rounded-lg outline-none text-base"
-              style={{
-                backgroundColor: "var(--input-bg)",
-                border: `1px solid var(--border)`,
-                color: "var(--text-primary)",
-              }}
-            />
-          </div>
+          <form onSubmit={handleSubmitMovement} className="space-y-2">
+            <div className="space-y-1">
+              <label className="text-sm md:text-lg  font-medium">Tool</label>
+              <input
+                type="text"
+                required
+                value={movement.toolName}
+                readOnly
+                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  border: `1px solid var(--border)`,
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm md:text-lg  font-medium">
+                Employee
+              </label>
+              <input
+                type="text"
+                required
+                value={movement.employeeName}
+                readOnly
+                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  border: `1px solid var(--border)`,
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+            {/* Note Input */}
+            <div className="space-y-1">
+              <label className="text-lg font-medium">Note (When taken)</label>
+              <textarea
+                placeholder="Montion your note..."
+                value={movement.takenNote}
+                name="takenNote"
+                onChange={(e) =>
+                  setMovement((prev) => ({
+                    ...prev,
+                    [e.target.name]: e.target.value,
+                  }))
+                }
+                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  border: `1px solid var(--border)`,
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+            {/* Signature Input */}
+            <div className="space-y-2">
+              <label className="text-lg font-medium">Signature</label>
+              <input
+                type="text"
+                required
+                value={movement.employeeSignatureForTake}
+                name="employeeSignatureForTake"
+                onChange={(e) =>
+                  setMovement((prev) => ({
+                    ...prev,
+                    [e.target.name]: e.target.value,
+                  }))
+                }
+                placeholder="Enter your signature..."
+                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  border: `1px solid var(--border)`,
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
 
-          {/* Buttons */}
-          <div className="flex justify-end gap-4 pt-6">
-            <button
-              disabled={addMovementMutation.isPending}
-              className="px-6 py-3 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer  disabled:cursor-not-allowed"
-              style={{
-                backgroundColor: "var(--button-create)",
+            {/* Buttons */}
+            <div className="flex justify-end gap-4 pt-6">
+              <button
+                disabled={addMovementMutation.isPending}
+                type="submit"
+                className="px-3 py-1 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer  disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: "var(--button-create)",
 
-                border: `1px solid var(--border)`,
-              }}
-            >
-              {addMovementMutation.isPending ? "Submitting..." : "Submit"}
-            </button>
-
-            <button
-              onClick={handleDiscard}
-              className="px-6 py-3 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer"
-              style={{
-                backgroundColor: "var(--button-delete)",
-
-                border: `1px solid var(--border)`,
-              }}
-            >
-              Discard
-            </button>
-          </div>
-        </form>
+                  border: `1px solid var(--border)`,
+                }}
+              >
+                {addMovementMutation.isPending ? "Submitting..." : "Submit"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

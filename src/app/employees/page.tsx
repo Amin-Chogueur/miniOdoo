@@ -22,15 +22,17 @@ export default function Employees() {
     staleTime: 600000,
   });
 
-  const filterdEmployee = employees?.filter((employee) =>
-    employee.fullName.toLowerCase().includes(search.trim().toLowerCase())
+  const filterdEmployee = employees?.filter(
+    (employee) =>
+      employee.fullName.toLowerCase().includes(search.trim().toLowerCase()) ||
+      employee.position.toLowerCase().includes(search.trim().toLowerCase())
   );
   if (isLoading) return <LoadingSpinner />;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
     <div
-      className="min-h-screen  transition-colors"
+      className="  transition-colors "
       style={{
         backgroundColor: "var(--background)",
         color: "var(--text-primary)",
@@ -44,10 +46,10 @@ export default function Employees() {
         search={search}
         setSearch={setSearch}
       />
-      {!isLoading && !error && employees?.length === 0 ? (
+      {!isLoading && filterdEmployee?.length === 0 ? (
         <NoResults message="No employee was found" />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6 mt-[170px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6 p-1 ">
           {filterdEmployee?.map((employee) => (
             <Employee key={employee._id} employee={employee} />
           ))}

@@ -30,7 +30,7 @@ export default function Tools() {
 
   return (
     <div
-      className="min-h-screen  transition-colors  mt-[170px]"
+      className="  transition-colors  "
       style={{
         backgroundColor: "var(--background)",
         color: "var(--text-primary)",
@@ -45,10 +45,10 @@ export default function Tools() {
         setSearch={setSearch}
       />
 
-      {!isLoading && tools?.length === 0 ? (
+      {!isLoading && filterdTools?.length === 0 ? (
         <NoResults message="No tools was found" />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1">
           {filterdTools?.map((tool) => (
             <ToolCard key={tool.code} tool={tool} />
           ))}

@@ -1,7 +1,8 @@
 export type ToolType = {
   _id?: string;
-  code: number | string;
+  code: string;
   name: string;
   shelf: string;
-  quantity: number | string;
+  quantity: number;
+  quantityTaken?: number;
 };

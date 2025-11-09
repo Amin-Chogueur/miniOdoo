@@ -19,7 +19,7 @@ export default function CustomHeader({
 }: CustomHeaderProps) {
   return (
     <header
-      className="mb-6 rounded fixed left-3 right-3 top-14 pt-6"
+      className="mb-6 rounded  sticky top-12 pt-6"
       style={{ backgroundColor: "var(--background)" }}
     >
       <h1 className="text-xl md:text-3xl font-bold text-center mb-5">

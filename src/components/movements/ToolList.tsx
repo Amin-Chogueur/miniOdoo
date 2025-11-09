@@ -5,10 +5,20 @@ import { getAllTools } from "@/query/toolQuery";
 
 type ToolListProps = {
   currentTool: string;
-  setTool: (name: string) => void;
+  setSearchTool: React.Dispatch<React.SetStateAction<string>>;
+  setToolData: React.Dispatch<
+    React.SetStateAction<{
+      toolName: string;
+      toolCode: string;
+      employeeName: string;
+      takenQuantity: number;
+      employeeSignatureForTake: string;
+      takenNote: string;
+    }>
+  >;
 };
 
-export default function ToolList({ currentTool, setTool }: ToolListProps) {
+function ToolList({ currentTool, setToolData, setSearchTool }: ToolListProps) {
   const [hideList, setHideList] = useState(false);
   const {
     data: tools,
@@ -22,24 +32,30 @@ export default function ToolList({ currentTool, setTool }: ToolListProps) {
   const filteredTools = tools?.filter((tool) =>
     tool.name.toLowerCase().includes(currentTool.toLowerCase())
   );
-  function handleClick(name: string) {
-    setTool(name);
+  function handleClick(tool: ToolType) {
+    setToolData((prev) => ({ ...prev, toolName: tool.name }));
+    setToolData((prev) => ({ ...prev, toolCode: tool.code }));
+    setSearchTool("");
     setHideList(true);
   }
   if (hideList) return;
   if (isLoading) return <p className="p-2">Loading tools...</p>;
+  if (filteredTools?.length === 0)
+    return <p className="p-1 text-red-500">No tool match your search</p>;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
   return (
-    <ul className="space-y-0.5 bg-black p-2">
+    <ul className="space-y-0.5 bg-black p-1">
       {filteredTools?.map((tool) => (
         <li
-          className="border-b p-1 cursor-pointer"
+          className="text-xs md:text-sm border-b py-1 cursor-pointer flex justify-between items-center"
           key={tool.code}
-          onClick={() => handleClick(tool.name)}
+          onClick={() => handleClick(tool)}
         >
-          {tool.name}
+          <span>{tool.name}</span>
+          <span>Qte:{tool.quantity - (tool.quantityTaken || 0)}</span>
         </li>
       ))}
     </ul>
   );
 }
+export default React.memo(ToolList);

@@ -6,6 +6,7 @@ import NavBar from "@/components/header/NavBar";
 import QueryProvider from "@/query/providers";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,15 +27,17 @@ export default function RootLayout({
       <head>
         <title>Mini Odoo</title>
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <QueryProvider>
-          <NavBar />
-          <main className="mt-14 max-w-7xl mx-auto p-4">{children}</main>
-          <ToastContainer position="top-center" autoClose={3000} />
-        </QueryProvider>
-      </body>
+      {
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <QueryProvider>
+            <NavBar />
+            <main className="mt-14 max-w-7xl mx-auto p-4">{children}</main>
+            <ToastContainer position="top-center" autoClose={3000} />
+          </QueryProvider>
+        </body>
+      }
     </html>
   );
 }

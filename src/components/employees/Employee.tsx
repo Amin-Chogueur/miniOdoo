@@ -22,7 +22,7 @@ export default function Employee({ employee }: { employee: EmployeeType }) {
   });
   function handleDeleteEmployee() {
     const confirm = window.confirm(
-      `Are you sure you want to delete this employee: ${employee.fullName}`
+      `Are you sure you want to delete this employee: ${employee.fullName.toUpperCase()}`
     );
     if (confirm) {
       deleteEmployeeMutation.mutate(employee._id!);
@@ -31,14 +31,13 @@ export default function Employee({ employee }: { employee: EmployeeType }) {
 
   return (
     <div
-      key={employee?._id}
       className="p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200"
       style={{
         backgroundColor: "var(--surface)",
         border: `1px solid var(--border)`,
       }}
     >
-      <h2 className="text-xl font-semibold mb-2 text-[var(--text-primary)]">
+      <h2 className="text-xl capitalize font-semibold mb-2 text-[var(--text-primary)]">
         {employee.fullName}{" "}
         <span
           style={{ color: "var(--text-secondary)" }}

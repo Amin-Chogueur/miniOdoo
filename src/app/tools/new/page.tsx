@@ -152,7 +152,7 @@ export default function NewEmployee() {
             <button
               disabled={addToolMutation.isPending}
               type="submit"
-              className="px-6 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+              className="px-3 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
               style={{
                 backgroundColor: `var(--button-create)`,
                 border: `1px solid var(--border)`,
@@ -163,7 +163,7 @@ export default function NewEmployee() {
 
             <button
               type="button"
-              className="px-6 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
+              className="px-3 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
               style={{
                 backgroundColor: "var(--button-delete)",
                 border: `1px solid var(--border)`,

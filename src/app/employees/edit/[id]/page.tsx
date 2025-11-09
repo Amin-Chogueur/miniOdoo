@@ -8,7 +8,7 @@ import Link from "next/link";
 import { EmployeeType } from "@/types/EmployeeType";
 import { getEmployee, updateEmployee } from "@/query/employeesQuery";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import Input from "@/components/employees/Input";
+import Input from "@/components/ui/Input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const initialState: EmployeeType = {
@@ -226,7 +226,7 @@ export default function EditEmployee({
           <div className="flex justify-end gap-4 pt-6">
             <button
               type="submit"
-              className="px-6 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
               style={{
                 backgroundColor: `var(--button-create)`,
                 border: `1px solid var(--border)`,
@@ -237,7 +237,7 @@ export default function EditEmployee({
 
             <Link
               href={"/employees"}
-              className="px-6 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
               style={{
                 backgroundColor: "var(--button-delete)",
                 border: `1px solid var(--border)`,

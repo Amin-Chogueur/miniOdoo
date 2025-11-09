@@ -1,29 +1,6 @@
 @import "tailwindcss";
-/* Light theme */
-:root {
-  /* Backgrounds */
-  --background: #f8f9fa; /* main page background */
-  --surface: #ffffff; /* cards, panels, buttons */
-  --header-bg: #f1f3f5; /* header or navbar */
-
-  /* Text */
-  --text-primary: #212529;
-  --text-secondary: #495057;
-  --text-muted: #6c757d;
-
-  /* Buttons */
-  --button-delete: #dc3545;
-  --button-update: #fd7e14;
-  --button-create: #198754;
-  --button-toggle: #6c757d;
-
-  /* Borders & accents */
-  --border: #dee2e6;
-  --accent: #198754; /* green accent for highlights */
-}
-
 /* Dark theme */
-html.dark {
+:root {
   /* Backgrounds */
   --background: #1f1f1f; /* dark gray background */
   --surface: #2c2c2c; /* slightly lighter surface */
@@ -43,6 +20,28 @@ html.dark {
   /* Borders & accents */
   --border: #3a3a3a;
   --accent: #28a745;
+}
+
+/* Light theme */
+html.light {
+  --background: #f8f9fa; /* main page background */
+  --surface: #ffffff; /* cards, panels, buttons */
+  --header-bg: #f1f3f5; /* header or navbar */
+
+  /* Text */
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
+
+  /* Buttons */
+  --button-delete: #dc3545;
+  --button-update: #fd7e14;
+  --button-create: #198754;
+  --button-toggle: #6c757d;
+
+  /* Borders & accents */
+  --border: #dee2e6;
+  --accent: #198754; /* green accent for highlights */
 }
 
 body {

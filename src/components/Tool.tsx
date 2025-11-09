@@ -36,15 +36,22 @@ export default function ToolCard({ tool }: { tool: ToolType }) {
         border: `1px solid var(--border)`,
       }}
     >
-      <h2 className="text-xl font-semibold mb-2">{tool.name}</h2>
+      <h2 className="text-xl font-semibold mb- capitalize">{tool.name}</h2>
       <p style={{ color: "var(--text-secondary)" }} className="mb-1">
-        <strong>ID:</strong> {tool.code}
+        <strong>Reference:</strong> {tool.code}
       </p>
       <p style={{ color: "var(--text-secondary)" }} className="mb-1">
         <strong>Shelf:</strong> {tool.shelf}
       </p>
-      <p style={{ color: "var(--text-secondary)" }} className="mb-3">
+      <p style={{ color: "var(--text-secondary)" }} className="mb-1">
         <strong>Quantity:</strong> {tool.quantity}
+      </p>
+      <p style={{ color: "var(--text-secondary)" }} className="mb-1">
+        <strong>Quantity Taken:</strong> {tool.quantityTaken}
+      </p>
+      <p style={{ color: "var(--text-secondary)" }} className="mb-1">
+        <strong>Quantity Avalaible:</strong>{" "}
+        {tool.quantity - (tool?.quantityTaken || 0)}
       </p>
 
       <div className="flex gap-2">

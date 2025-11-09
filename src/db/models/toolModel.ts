@@ -6,6 +6,7 @@ const ToolSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true },
     shelf: { type: String, required: true },
     quantity: { type: Number, required: true },
+    quantityTaken: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

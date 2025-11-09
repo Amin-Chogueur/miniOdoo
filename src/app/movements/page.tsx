@@ -41,7 +41,7 @@ export default function ToolMovements() {
 
   return (
     <div
-      className="min-h-screen transition-colors"
+      className=" transition-colors"
       style={{
         backgroundColor: "var(--background)",
         color: "var(--text-primary)",
@@ -49,19 +49,19 @@ export default function ToolMovements() {
     >
       {/* Header */}
       <CustomHeader
-        title="Tool Movement"
+        title="Tools Movement"
         path="/movements/new"
         placeholder="Search for movement ..."
         search={search}
         setSearch={setSearch}
       />
-      <label className="flex items-center gap-2 text-sm font-medium  mt-[150px]">
+      <label className="flex items-center gap-2 text-sm font-medium p-1">
         <input
           type="checkbox"
           checked={showUnavailableOnly}
           onChange={() => setShowUnavailableOnly((prev) => !prev)}
         />
-        Unavailable only
+        Taken only
       </label>
 
       {/* Table */}

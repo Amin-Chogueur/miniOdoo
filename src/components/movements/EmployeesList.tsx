@@ -6,12 +6,23 @@ import { EmployeeType } from "@/types/EmployeeType";
 
 type EmployeesListProps = {
   currentPerson: string;
-  setPerson: (name: string) => void;
+  setSearchEmployee: React.Dispatch<React.SetStateAction<string>>;
+  setEmployee: React.Dispatch<
+    React.SetStateAction<{
+      toolName: string;
+      toolCode: string;
+      employeeName: string;
+      takenQuantity: number;
+      employeeSignatureForTake: string;
+      takenNote: string;
+    }>
+  >;
 };
 
-export default function EmployeesList({
+function EmployeesList({
   currentPerson,
-  setPerson,
+  setEmployee,
+  setSearchEmployee,
 }: EmployeesListProps) {
   const [hideList, setHideList] = useState(false);
   const {
@@ -27,17 +38,20 @@ export default function EmployeesList({
     person.fullName.toLowerCase().includes(currentPerson.toLowerCase())
   );
   function handleClick(name: string) {
-    setPerson(name);
+    setEmployee((prev) => ({ ...prev, employeeName: name }));
+    setSearchEmployee("");
     setHideList(true);
   }
   if (hideList) return;
   if (isLoading) return <p className="p-2">Loading employees...</p>;
+  if (filteredEmployees?.length === 0)
+    return <p className="p-1 text-red-500">No employee match your search</p>;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
   return (
-    <ul className="space-y-0.5 bg-black p-2">
+    <ul className="space-y-0.5 bg-black p-1">
       {filteredEmployees?.map((employee) => (
         <li
-          className="border-b p-1 cursor-pointer"
+          className="text-xs md:text-sm py-1 border-b  cursor-pointer"
           key={employee?._id}
           onClick={() => handleClick(employee.fullName)}
         >
@@ -47,3 +61,4 @@ export default function EmployeesList({
     </ul>
   );
 }
+export default React.memo(EmployeesList);
