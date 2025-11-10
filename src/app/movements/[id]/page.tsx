@@ -16,6 +16,7 @@ export default function MovementDetails({
   const route = useRouter();
   const { id } = use(params);
   const queryClient = useQueryClient();
+  const [returnedQuantity, setReturnedQuantity] = useState(0);
   const [returnSignature, setReturnSignature] = useState("");
   const [returnNote, setReturnNote] = useState("");
 
@@ -36,6 +37,7 @@ export default function MovementDetails({
       // ✅ Refetch movements list to update UI
       queryClient.invalidateQueries({ queryKey: ["movements"] });
       queryClient.invalidateQueries({ queryKey: ["movement", id] });
+      queryClient.invalidateQueries({ queryKey: ["tools"] });
       route.push("/movements");
     },
     onError: (error) => {
@@ -46,10 +48,16 @@ export default function MovementDetails({
   async function handleReturnTool(e: FormEvent) {
     e.preventDefault();
     if (!returnSignature) return;
+    if (returnedQuantity === 0) {
+      alert("Please specify the returned quantity");
+      return;
+    }
 
     const updatedMovement = {
+      ...movement,
       employeeSignatureForReturn: returnSignature,
       returnNote: returnNote,
+      returnedQuantity: returnedQuantity,
       storekeeperReceiverName: "Fouad",
       returnedAt: new Date().toISOString(),
     };
@@ -83,22 +91,29 @@ export default function MovementDetails({
           </h1>
 
           <div className="space-y-5 text-lg">
-            <div className="flex justify-between border-b pb-2">
-              <strong>Tool Name:</strong>
-              <span>{movement?.toolName}</span>
+            <div className="flex items-center justify-between  border-b pb-2">
+              <div className="space-x-2 ">
+                <strong>Tool Name:</strong>
+                <span className="capitalize">{movement?.toolName}</span>
+              </div>
+              <div className="space-x-2 ">
+                <strong>Qte Taken:</strong>
+                <span>{movement?.takenQuantity}</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between  border-b pb-2">
+              <div className="space-x-2 ">
+                <strong>Employee:</strong>
+                <span>{movement?.employeeName}</span>
+              </div>
+
+              <div className="space-x-2 ">
+                <strong>Storekeeper (Given):</strong>
+                <span>{movement?.storekeeperGivenName}</span>
+              </div>
             </div>
 
-            <div className="flex justify-between border-b pb-2">
-              <strong>Employee:</strong>
-              <span>{movement?.employeeName}</span>
-            </div>
-
-            <div className="flex justify-between border-b pb-2">
-              <strong>Storekeeper (Given):</strong>
-              <span>{movement?.storekeeperGivenName}</span>
-            </div>
-
-            <div className="flex justify-between border-b pb-2">
+            <div className="space-x-3 border-b pb-2">
               <strong>Taken At:</strong>
               {movement?.takenAt && (
                 <span>{new Date(movement.takenAt).toLocaleString()}</span>
@@ -107,8 +122,14 @@ export default function MovementDetails({
 
             {movement?.returnedAt ? (
               <div className="flex justify-between border-b pb-2">
-                <strong>Returned At:</strong>
-                <span>{new Date(movement?.returnedAt).toLocaleString()}</span>
+                <div className="space-x-2">
+                  <strong>Returned At:</strong>
+                  <span>{new Date(movement?.returnedAt).toLocaleString()}</span>
+                </div>
+                <div className="space-x-2">
+                  <strong>Qte Returned:</strong>
+                  <span>{movement?.returnedQuantity}</span>
+                </div>
               </div>
             ) : null}
             {movement?.storekeeperReceiverName ? (
@@ -118,13 +139,13 @@ export default function MovementDetails({
               </div>
             ) : null}
             {movement?.takenNote ? (
-              <div className="flex gap-3 border-b pb-2">
+              <div className="flex flex-col gap-2 border-b pb-2">
                 <strong>Note (When taken):</strong>
                 <p>{movement?.takenNote}</p>
               </div>
             ) : null}
             {movement?.returnNote ? (
-              <div className="flex gap-3 border-b pb-2">
+              <div className="flex flex-col gap-2 border-b pb-2">
                 <strong>Note (On Return):</strong>
                 <p>{movement?.returnNote}</p>
               </div>
@@ -153,6 +174,26 @@ export default function MovementDetails({
               </div>
             </div>
             <form onSubmit={handleReturnTool} className="space-y-2">
+              {!movement?.employeeSignatureForReturn ? (
+                <div className="w-24 sm:w-32">
+                  <label className="block text-sm md:text-lg font-medium">
+                    Qte Returned
+                  </label>
+                  <input
+                    min={0}
+                    required
+                    value={returnedQuantity}
+                    onChange={(e) => setReturnedQuantity(+e.target.value)}
+                    type="number"
+                    className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                    style={{
+                      backgroundColor: "var(--input-bg)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                </div>
+              ) : null}
               {!movement?.employeeSignatureForReturn ? (
                 <div>
                   <h2 className="text-xl font-semibold mb-3">

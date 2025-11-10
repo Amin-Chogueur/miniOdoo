@@ -2,14 +2,20 @@
 
 import ToolMovementCard from "@/components/movements/Movement";
 import { ToolMovementType } from "@/types/MovementType";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getAllMovements } from "@/query/movementQuery";
 import CustomHeader from "@/components/ui/CustomHeader";
 import NoResults from "@/components/ui/NoResults";
+import { useReactToPrint } from "react-to-print";
 
 export default function ToolMovements() {
+  const componentRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef, // ✅ new API
+    documentTitle: `Tool Movement ${new Date().toLocaleDateString()}`,
+  });
   const [search, setSearch] = useState("");
   const [showUnavailableOnly, setShowUnavailableOnly] = useState(false);
   // 🔹 Use React Query for fetching
@@ -55,30 +61,46 @@ export default function ToolMovements() {
         search={search}
         setSearch={setSearch}
       />
-      <label className="flex items-center gap-2 text-sm font-medium p-1">
-        <input
-          type="checkbox"
-          checked={showUnavailableOnly}
-          onChange={() => setShowUnavailableOnly((prev) => !prev)}
-        />
-        Taken only
-      </label>
+      <div className="pr-3 flex justify-between items-center mb-3 ">
+        <label className="flex items-center gap-2 text-sm font-medium p-1">
+          <input
+            type="checkbox"
+            checked={showUnavailableOnly}
+            onChange={() => setShowUnavailableOnly((prev) => !prev)}
+          />
+          Taken only
+        </label>
+        {filtredToolMovementsList && filtredToolMovementsList?.length > 0 ? (
+          <button
+            onClick={handlePrint}
+            className="hidden md:inline text-sm cursor-pointer bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-white transition-colors"
+          >
+            <span className="hidden md:inline"> Print</span>
+          </button>
+        ) : null}
+      </div>
 
       {/* Table */}
       {!isLoading && filtredToolMovementsList?.length === 0 ? (
         <NoResults message="No Movements was found" />
       ) : (
-        <div className="overflow-x-auto  ">
+        <div ref={componentRef} className="print-page overflow-x-auto">
           <table className="min-w-full border-collapse">
             <thead>
               <tr style={{ borderBottom: `2px solid var(--border)` }}>
                 <th className="px-4 py-2 text-left">Actions</th>
                 <th className="px-4 py-2 text-left">Tool</th>
+                <th className="px-4 py-2 text-left">
+                  Qte <br /> Taken
+                </th>
                 <th className="px-4 py-2 text-left">Storekeeper (Given)</th>
                 <th className="px-4 py-2 text-left">Employee</th>
                 <th className="px-4 py-2 text-left">Taken At</th>
                 <th className="px-4 py-2 text-left">Signature (Take)</th>
                 <th className="px-4 py-2 text-left">Returned At</th>
+                <th className="px-4 py-2 text-left">
+                  Qte <br /> Returned
+                </th>
                 <th className="px-4 py-2 text-left">Signature (Return)</th>
                 <th className="px-4 py-2 text-left">Storekeeper (Receiver)</th>
               </tr>

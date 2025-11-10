@@ -25,7 +25,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Mini Odoo</title>
+        <title>Mini Odoo App</title>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       {
         <body
@@ -33,7 +34,7 @@ export default function RootLayout({
         >
           <QueryProvider>
             <NavBar />
-            <main className="mt-14 max-w-7xl mx-auto p-4">{children}</main>
+            <main className="mt-14 max-w-7xl mx-auto p-2 mb-8">{children}</main>
             <ToastContainer position="top-center" autoClose={3000} />
           </QueryProvider>
         </body>

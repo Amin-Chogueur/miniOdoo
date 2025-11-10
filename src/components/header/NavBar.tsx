@@ -1,9 +1,14 @@
 "use client";
+import { useState } from "react";
 import { useThemeToggle } from "@/hooks/useThemeToggle";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 export default function NavBar() {
   const { isDark, toggleTheme } = useThemeToggle();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
     { link: "/", lable: "Dashboard" },
@@ -14,44 +19,106 @@ export default function NavBar() {
 
   return (
     <header
-      className="top-0 z-50 fixed w-full flex items-center justify-between px-6 py-3 shadow-md transition-colors"
+      className="fixed top-0 z-50 w-full flex items-center justify-between px-6 py-3 shadow-md transition-colors"
       style={{
         backgroundColor: "var(--header-bg)",
         color: "var(--text-primary)",
       }}
     >
-      {/* Logo / App Name */}
+      {/* Logo */}
       <div className="flex items-center gap-3">
         <div
           className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg"
           style={{ backgroundColor: "var(--accent)", color: "#fff" }}
         >
-          OA
+          MOA
         </div>
-        <span className="text-xl font-semibold">OdooApp</span>
       </div>
 
-      {/* Navigation Links */}
+      {/* Desktop Nav */}
       <nav className="hidden md:flex gap-6">
-        {navLinks.map((link, index) => (
-          <Link key={index} href={link.link} className="transition-colors ">
-            {link.lable}
-          </Link>
-        ))}
+        {navLinks.map((link, index) => {
+          const isActive = pathname === link.link;
+          return (
+            <Link
+              key={index}
+              href={link.link}
+              className={`transition-colors ${
+                isActive
+                  ? "text-green-500 font-semibold"
+                  : "hover:text-[var(--accent)]"
+              }`}
+            >
+              {link.lable}
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Theme Toggle */}
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="md:hidden p-2 rounded-md border border-[var(--border)]"
+        style={{ backgroundColor: "var(--background)", color: "#fff" }}
+      >
+        {menuOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+
+      {/* Theme Toggle (Desktop only) */}
       <button
         onClick={toggleTheme}
-        className="p-1 cursor-pointer transition rounded-full"
+        className="hidden md:block p-1 cursor-pointer transition rounded-full"
         style={{
           backgroundColor: "var(--background)",
           color: "#fff",
           border: "1px solid var(--border)",
         }}
       >
-        {isDark ? "🌙" : "🌞 "}
+        {isDark ? "🌙" : "🌞"}
       </button>
+
+      {/* Mobile Dropdown Menu */}
+      {menuOpen && (
+        <div
+          className="absolute top-full left-0 w-full flex flex-col items-center gap-4 py-4 md:hidden"
+          style={{
+            backgroundColor: "var(--header-bg)",
+            color: "var(--text-primary)",
+            borderTop: "1px solid var(--border)",
+          }}
+        >
+          {navLinks.map((link, index) => {
+            const isActive = pathname === link.link;
+            return (
+              <Link
+                key={index}
+                href={link.link}
+                onClick={() => setMenuOpen(false)}
+                className={`text-lg transition ${
+                  isActive
+                    ? "text-green-500 font-semibold"
+                    : "hover:text-[var(--accent)]"
+                }`}
+              >
+                {link.lable}
+              </Link>
+            );
+          })}
+
+          {/* Theme toggle inside mobile menu */}
+          <button
+            onClick={toggleTheme}
+            className="p-1 cursor-pointer transition rounded-full"
+            style={{
+              backgroundColor: "var(--background)",
+              color: "#fff",
+              border: "1px solid var(--border)",
+            }}
+          >
+            {isDark ? "🌙" : "🌞"}
+          </button>
+        </div>
+      )}
     </header>
   );
 }

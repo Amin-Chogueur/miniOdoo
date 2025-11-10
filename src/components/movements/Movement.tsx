@@ -30,6 +30,7 @@ export default function ToolMovementCard({
         </Link>
       </td>
       <td className="px-4 py-2">{movement.toolName}</td>
+      <td className="px-4 py-2">{movement.takenQuantity}</td>
       <td className="px-4 py-2">{movement.storekeeperGivenName}</td>
       <td className="px-4 py-2">{movement.employeeName}</td>
       <td className="px-4 py-2">
@@ -44,7 +45,7 @@ export default function ToolMovementCard({
           ? new Date(movement.returnedAt).toLocaleString()
           : "Not returned"}
       </td>
-
+      <td className="px-4 py-2">{movement.returnedQuantity || 0}</td>
       <td className="px-4 py-2">
         {movement.employeeSignatureForReturn ? (
           <p>{movement.employeeSignatureForReturn}</p>

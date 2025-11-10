@@ -18,10 +18,12 @@ export async function POST(req: NextRequest) {
     } = movement;
     console.log(movement);
     if (!employeeName || !storekeeperGivenName || !toolName || !toolCode) {
-      return NextResponse.json({
-        message: "Provide all required details.",
-        status: 400,
-      });
+      return NextResponse.json(
+        {
+          message: "Provide all required details.",
+        },
+        { status: 400 }
+      );
     }
 
     await Tool.findOneAndUpdate(

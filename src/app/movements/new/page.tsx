@@ -53,7 +53,6 @@ export default function NewMovements() {
 
     const newMovement = {
       ...movement,
-      takenQunatity: 1,
       takenAt: new Date().toISOString(),
       storekeeperGivenName: "Amin",
     };
@@ -67,7 +66,7 @@ export default function NewMovements() {
         &larr; Back
       </Link>
       <div
-        className="min-h-screen flex items-center justify-center py-6 "
+        className=" flex items-center justify-center py-6 "
         style={{
           backgroundColor: "var(--background)",
           color: "var(--text-primary)",
@@ -148,20 +147,50 @@ export default function NewMovements() {
           {/* ----------------- Form ---------------------- */}
 
           <form onSubmit={handleSubmitMovement} className="space-y-2">
-            <div className="space-y-1">
-              <label className="text-sm md:text-lg  font-medium">Tool</label>
-              <input
-                type="text"
-                required
-                value={movement.toolName}
-                readOnly
-                className="w-full px-4 py-2 rounded-lg outline-none text-base"
-                style={{
-                  backgroundColor: "var(--input-bg)",
-                  border: `1px solid var(--border)`,
-                  color: "var(--text-primary)",
-                }}
-              />
+            <div className="space-y-1 ">
+              <div className="flex items-center gap-4">
+                <div className="flex-1 min-w-[60%]">
+                  <label className="block text-sm md:text-lg font-medium">
+                    Tool
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={movement.toolName}
+                    readOnly
+                    className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                    style={{
+                      backgroundColor: "var(--input-bg)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                </div>
+
+                <div className="w-24 sm:w-32">
+                  <label className="block text-sm md:text-lg font-medium">
+                    Qte
+                  </label>
+                  <input
+                    min={0}
+                    value={movement.takenQuantity}
+                    name="takenQuantity"
+                    onChange={(e) =>
+                      setMovement((prev) => ({
+                        ...prev,
+                        [e.target.name]: e.target.value,
+                      }))
+                    }
+                    type="number"
+                    className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                    style={{
+                      backgroundColor: "var(--input-bg)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                </div>
+              </div>
             </div>
             <div className="space-y-1">
               <label className="text-sm md:text-lg  font-medium">

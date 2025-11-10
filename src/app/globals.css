@@ -50,3 +50,57 @@ body {
   font-family: "Inter", Arial, Helvetica, sans-serif;
   transition: background-color 0.3s, color 0.3s;
 }
+
+@media print {
+  @page {
+    size: A4 landscape; /* or "landscape" only */
+    margin: 10mm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: white !important;
+    color: black !important;
+    font-family: Arial, sans-serif !important;
+  }
+
+  /* Target only your printable content */
+  .print-page {
+    width: 100%;
+    max-width: 297mm; /* A4 width in landscape */
+    font-size: 12px !important;
+    background: white !important;
+    color: black !important;
+    margin: 0 auto;
+  }
+
+  /* Table cleanup for print */
+  .print-page table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  .print-page th,
+  .print-page td {
+    border: 1px solid #000 !important;
+    color: black !important;
+    padding: 4px 6px !important;
+    font-size: 12px !important;
+    background: white !important;
+  }
+
+  /* Hide buttons, links, and other UI stuff */
+  a,
+  button {
+    background-color: white !important;
+    color: black;
+    border: none !important;
+    /* display: none !important; */
+  }
+
+  /* Optional: shrink spacing between rows */
+  .print-page tr {
+    line-height: 1.1 !important;
+  }
+}

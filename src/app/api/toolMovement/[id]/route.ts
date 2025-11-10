@@ -1,5 +1,7 @@
 import { connectToDB } from "@/db/connectToDb";
+import Tool from "@/db/models/toolModel";
 import ToolMovement from "@/db/models/toolMovementModel";
+import { ToolMovementType } from "@/types/MovementType";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -25,14 +27,86 @@ export async function PATCH(
   try {
     const { id } = await params;
     await connectToDB();
-    const updatedMovement = await req.json();
+    const updatedMovement: ToolMovementType = await req.json();
+    const {
+      returnedQuantity,
+      toolCode,
+      takenQuantity,
+      storekeeperGivenName,
+      employeeName,
+      employeeSignatureForTake,
+      takenAt,
+      toolName,
+    } = updatedMovement;
 
-    const movement = await ToolMovement.findByIdAndUpdate(id, updatedMovement);
-    if (movement) {
-      return NextResponse.json({
-        movement,
-        message: "Movement edited successfully",
-      });
+    if (returnedQuantity === undefined || !toolCode) {
+      return NextResponse.json(
+        {
+          message: "Provide all required details.",
+        },
+        { status: 400 }
+      );
+    }
+    //case the quantity returned equal to quantity taken
+    if (returnedQuantity && returnedQuantity === takenQuantity) {
+      await Tool.findOneAndUpdate(
+        { code: toolCode },
+        {
+          $inc: {
+            quantityTaken: -returnedQuantity,
+          },
+        }
+      );
+      const movement = await ToolMovement.findByIdAndUpdate(
+        id,
+        updatedMovement
+      );
+      if (movement) {
+        return NextResponse.json({
+          movement,
+          message: "Movement edited successfully",
+        });
+      }
+    }
+    //case quantity returned is less then the quantity taken we create seperate movement for the rest quantityt taken and update the curent quantity
+    if (returnedQuantity && returnedQuantity < takenQuantity) {
+      await Tool.findOneAndUpdate(
+        { code: toolCode },
+        {
+          $inc: {
+            quantityTaken: -returnedQuantity,
+          },
+        }
+      );
+      const newUpdatedMovement = {
+        ...updatedMovement,
+        takenQuantity: returnedQuantity,
+      };
+      const newMovementWithTheRestQuantity = {
+        takenQuantity: takenQuantity - returnedQuantity,
+        returnedQuantity: 0,
+        toolCode,
+        takenNote: `This is auto message for the new movement created for this tool, Mr ${employeeName} still have to gave back the remaining quantity of  ${toolName}. `,
+        storekeeperGivenName,
+        employeeName,
+        employeeSignatureForTake,
+        takenAt,
+        toolName,
+      };
+      const movement = await ToolMovement.findByIdAndUpdate(
+        id,
+        newUpdatedMovement
+      );
+
+      const newMovement = await ToolMovement.create(
+        newMovementWithTheRestQuantity
+      );
+      if (movement && newMovement) {
+        return NextResponse.json({
+          movement,
+          message: "Movement edited successfully",
+        });
+      }
     }
   } catch (error) {
     console.log(error);
