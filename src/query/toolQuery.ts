@@ -1,4 +1,3 @@
-import { EmployeeType } from "@/types/EmployeeType";
 import { ToolType } from "@/types/ToolType";
 import axios from "axios";
 import { toast } from "react-toastify";

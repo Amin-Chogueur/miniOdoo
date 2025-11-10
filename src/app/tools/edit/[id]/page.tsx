@@ -13,7 +13,7 @@ const initialState = {
   name: "",
   code: "",
   shelf: "",
-  quantity: "",
+  quantity: 0,
 };
 
 export default function EditTool({
@@ -152,9 +152,9 @@ export default function EditTool({
             <label className="block text-lg font-medium">Quantity</label>
             <input
               onChange={handleChange}
-              value={tool.quantity ?? ""}
+              value={tool.quantity ?? 0}
               name="quantity"
-              type="text"
+              type="number"
               placeholder="Enter quantity"
               className="w-full px-4 py-3 rounded-xl outline-none text-base focus:ring-2 focus:ring-blue-500"
               style={{

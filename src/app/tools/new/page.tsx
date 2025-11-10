@@ -11,7 +11,7 @@ const initialState = {
   name: "",
   code: "",
   shelf: "",
-  quantity: "",
+  quantity: 0,
 };
 
 export default function NewEmployee() {
@@ -136,7 +136,7 @@ export default function NewEmployee() {
               onChange={handleChange}
               value={tool.quantity}
               name="quantity"
-              type="text"
+              type="number"
               placeholder="Enter quantity"
               className="w-full px-4 py-3 rounded-xl outline-none text-base focus:ring-2 focus:ring-blue-500"
               style={{
