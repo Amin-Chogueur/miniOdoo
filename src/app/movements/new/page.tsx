@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addMovement } from "@/query/movementQuery";
 import EmployeesList from "@/components/movements/EmployeesList";
 import Link from "next/link";
+import SignaturePad from "@/components/movements/SignaturePad";
 
 const initialState = {
   toolName: "",
@@ -233,24 +234,13 @@ export default function NewMovements() {
             {/* Signature Input */}
             <div className="space-y-2">
               <label className="text-lg font-medium">Signature</label>
-              <input
-                type="text"
-                required
-                value={movement.employeeSignatureForTake}
-                name="employeeSignatureForTake"
-                onChange={(e) =>
+              <SignaturePad
+                onEnd={(signatureData) =>
                   setMovement((prev) => ({
                     ...prev,
-                    [e.target.name]: e.target.value,
+                    employeeSignatureForTake: signatureData, // store base64 image string
                   }))
                 }
-                placeholder="Enter your signature..."
-                className="w-full px-4 py-2 rounded-lg outline-none text-base"
-                style={{
-                  backgroundColor: "var(--input-bg)",
-                  border: `1px solid var(--border)`,
-                  color: "var(--text-primary)",
-                }}
               />
             </div>
 

@@ -34,7 +34,9 @@ export default function RootLayout({
         >
           <QueryProvider>
             <NavBar />
-            <main className="mt-14 max-w-7xl mx-auto p-2 mb-8">{children}</main>
+            <main className="mt-14 max-w-[95%] mx-auto p-2 mb-8">
+              {children}
+            </main>
             <ToastContainer position="top-center" autoClose={3000} />
           </QueryProvider>
         </body>
