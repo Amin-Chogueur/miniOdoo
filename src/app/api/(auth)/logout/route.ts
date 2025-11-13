@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const response = NextResponse.redirect(
-      new URL("/signin", "http://localhost:3000")
+      new URL("/signin", "https://mini-odoo.vercel.app")
     );
     response.cookies.set("miniOdooApp", "", {
       httpOnly: true,
