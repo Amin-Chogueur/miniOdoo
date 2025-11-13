@@ -27,8 +27,26 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Apply to all routes except static files and Next internals
   matcher: [
-    "/((?!_next|api/auth|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/",
+    "/tools",
+    "/tools/new",
+    "/tools/edit:path*",
+    "/employees",
+    "/employees/new",
+    "/employees/edit:path*",
+    "/movements",
+    "/movements/new",
+    "/movement/:path*",
+    "/api/employees",
+    "/api/employees/:path*",
+    "/api/tollMovements",
+    "/api/toolMovements/:path",
+    "/api/tools",
+    "/api/tools/:path*",
+    "/signup",
+    "/signin",
+    "/forgot-password",
+    "/reset-password",
   ],
 };
