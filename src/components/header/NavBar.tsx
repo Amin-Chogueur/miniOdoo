@@ -4,6 +4,7 @@ import { useThemeToggle } from "@/hooks/useThemeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import LogoutButton from "./LogoutButton";
 
 export default function NavBar() {
   const { isDark, toggleTheme } = useThemeToggle();
@@ -65,17 +66,20 @@ export default function NavBar() {
       </button>
 
       {/* Theme Toggle (Desktop only) */}
-      <button
-        onClick={toggleTheme}
-        className="hidden md:block p-1 cursor-pointer transition rounded-full"
-        style={{
-          backgroundColor: "var(--background)",
-          color: "#fff",
-          border: "1px solid var(--border)",
-        }}
-      >
-        {isDark ? "🌙" : "🌞"}
-      </button>
+      <div className="hidden md:flex items-center gap-3">
+        <LogoutButton />
+        <button
+          onClick={toggleTheme}
+          className="p-1 cursor-pointer transition rounded-full"
+          style={{
+            backgroundColor: "var(--background)",
+            color: "#fff",
+            border: "1px solid var(--border)",
+          }}
+        >
+          {isDark ? "🌙" : "🌞"}
+        </button>
+      </div>
 
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
@@ -106,17 +110,20 @@ export default function NavBar() {
           })}
 
           {/* Theme toggle inside mobile menu */}
-          <button
-            onClick={toggleTheme}
-            className="p-1 cursor-pointer transition rounded-full"
-            style={{
-              backgroundColor: "var(--background)",
-              color: "#fff",
-              border: "1px solid var(--border)",
-            }}
-          >
-            {isDark ? "🌙" : "🌞"}
-          </button>
+          <div className="  flex flex-col items-center gap-3">
+            <LogoutButton />
+            <button
+              onClick={toggleTheme}
+              className="p-1 cursor-pointer transition rounded-full"
+              style={{
+                backgroundColor: "var(--background)",
+                color: "#fff",
+                border: "1px solid var(--border)",
+              }}
+            >
+              {isDark ? "🌙" : "🌞"}
+            </button>
+          </div>
         </div>
       )}
     </header>

@@ -49,7 +49,7 @@ export default function Employees() {
       {!isLoading && filterdEmployee?.length === 0 ? (
         <NoResults message="No employee was found" />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6 p-1 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1 ">
           {filterdEmployee?.map((employee) => (
             <Employee key={employee._id} employee={employee} />
           ))}

@@ -152,9 +152,11 @@ export default function MovementDetails({
 
           {/* Employee Signature (Taken) */}
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold">Employee Signature (Take)</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Employee Signature (Take)
+            </h2>
             <div
-              className="h-36 flex items-center justify-center rounded-xl border border-dashed"
+              className="h-50 flex items-center justify-center rounded-xl border border-dashed"
               style={{
                 backgroundColor: "var(--header-bg)",
                 borderColor: "var(--border)",
@@ -244,11 +246,11 @@ export default function MovementDetails({
 
           {movement?.employeeSignatureForReturn && (
             <div className="mt-6">
-              <h2 className="text-xl font-semibold mb-2">
+              <h2 className="text-xl font-semibold mb-4">
                 Employee Signature (Return)
               </h2>
               <div
-                className="flex items-center justify-center h-32 p-4 rounded-xl border border-dashed"
+                className="flex items-center justify-center h-50 p-4 rounded-xl border border-dashed"
                 style={{
                   backgroundColor: "var(--header-bg)",
                   borderColor: "var(--border)",
@@ -257,7 +259,7 @@ export default function MovementDetails({
                 <img
                   src={movement.employeeSignatureForReturn!}
                   alt="Employee Signature"
-                  className="w-[300px] h-auto object-contain"
+                  className="w-[300px] h-auto object-contain "
                 />
               </div>
             </div>

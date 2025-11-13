@@ -1,92 +1,99 @@
 "use client";
-import { useThemeToggle } from "@/hooks/useThemeToggle";
+
+import DashBoardCard from "@/components/dashboard/DashBoardCard";
+import EmployeesTable from "@/components/dashboard/EmployeesTable";
+import RecentMovementsTable from "@/components/dashboard/RecentMovementsTable";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { getAllEmployees } from "@/query/employeesQuery";
+import { getAllMovements } from "@/query/movementQuery";
+import { getAllTools } from "@/query/toolQuery";
+import { EmployeeType } from "@/types/EmployeeType";
+import { ToolMovementType } from "@/types/MovementType";
+import { ToolType } from "@/types/ToolType";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { FaExchangeAlt, FaTools, FaUsers } from "react-icons/fa";
 
 export default function Home() {
-  const { isDark, toggleTheme } = useThemeToggle();
+  const { data: movements, isLoading: isMovementLoading } = useQuery<
+    ToolMovementType[]
+  >({
+    queryKey: ["movements"],
+    queryFn: getAllMovements,
+    staleTime: 600000,
+  });
+
+  const { data: tools, isLoading: isToolsLoading } = useQuery<ToolType[]>({
+    queryKey: ["tools"],
+    queryFn: getAllTools,
+    staleTime: 600000,
+  });
+
+  const { data: employees, isLoading: isEmployeesLoading } = useQuery<
+    EmployeeType[]
+  >({
+    queryKey: ["employees"],
+    queryFn: getAllEmployees,
+    staleTime: 600000,
+  });
+
+  const totalEmployees = employees?.length;
+  const totalTools = tools?.length;
+  const totalMovements = movements?.length;
+
+  const latestEmployees = useMemo(() => employees?.slice(0, 3), [employees]);
+  const latestMovements = useMemo(() => movements?.slice(0, 5), [movements]);
+  if (isEmployeesLoading || isMovementLoading || isToolsLoading)
+    return <LoadingSpinner />;
 
   return (
     <div
-      className="min-h-screen  transition-colors"
+      className="min-h-screen  pt-6 transition-colors duration-300"
       style={{
         backgroundColor: "var(--background)",
         color: "var(--text-primary)",
       }}
     >
-      {/* Header */}
-      <header
-        className="p-4 mb-8 rounded"
-        style={{ backgroundColor: "var(--header-bg)" }}
-      >
-        <h1 className="text-3xl font-bold">Theme Test Header</h1>
-        <p style={{ color: "var(--text-secondary)" }}>
-          This is secondary text in the header
-        </p>
-      </header>
+      <h1 className="text-3xl font-bold mb-6 text-center">Dashboard</h1>
 
-      {/* Buttons */}
-      <div className="mb-8 flex gap-4">
-        <button
-          onClick={toggleTheme}
-          className="px-4 py-2 rounded transition"
-          style={{
-            backgroundColor: "var(--button-bg)",
-            color: "var(--button-text)",
-            border: "1px solid var(--border)",
-          }}
-        >
-          {isDark ? "🌙 Dark" : "🌞 Light"} Mode
-        </button>
-        <button
-          className="px-4 py-2 rounded transition"
-          style={{
-            backgroundColor: "var(--accent)",
-            color: "#fff",
-            border: "1px solid var(--border)",
-          }}
-        >
-          Accent Button
-        </button>
+      {/* Cartes de statistiques */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        {!isEmployeesLoading && totalEmployees ? (
+          <DashBoardCard
+            title="Total Employees"
+            data={totalEmployees}
+            Icon={FaUsers}
+            link="/employees"
+          />
+        ) : null}
+        {!isToolsLoading && totalTools ? (
+          <DashBoardCard
+            title="  Tools"
+            data={totalTools}
+            Icon={FaTools}
+            link="/tools"
+          />
+        ) : null}
+        {!isMovementLoading && totalMovements ? (
+          <DashBoardCard
+            title="Total Movements"
+            data={totalMovements}
+            Icon={FaExchangeAlt}
+            link="/movements"
+          />
+        ) : null}
       </div>
 
-      {/* Card / Panel */}
-      <div
-        className="p-6 rounded shadow-md max-w-md"
-        style={{
-          backgroundColor: "var(--surface)",
-          border: "1px solid var(--border)",
-        }}
-      >
-        <h2 className="text-2xl font-semibold mb-2">Card Title</h2>
-        <p style={{ color: "var(--text-muted)" }}>
-          This is some example text inside a card or panel. It uses the muted
-          text color.
-        </p>
-        <button
-          className="mt-4 px-3 py-1 rounded transition"
-          style={{
-            backgroundColor: "var(--button-bg)",
-            color: "var(--button-text)",
-            border: "1px solid var(--border)",
-          }}
-        >
-          Card Button
-        </button>
-      </div>
+      {/* Section employés récents */}
+      {latestEmployees ? (
+        <EmployeesTable latestEmployees={latestEmployees} />
+      ) : null}
 
-      {/* Paragraph Text */}
-      <section className="mt-8 max-w-prose">
-        <p style={{ color: "var(--text-primary)" }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis euismod,
-          nisl vel tincidunt lacinia, nunc sapien vehicula risus, ut volutpat ex
-          odio at sapien.
-        </p>
-        <p style={{ color: "var(--text-secondary)" }}>
-          Secondary text example, for less important info.
-        </p>
-        <p style={{ color: "var(--text-muted)" }}>
-          Muted text example, for notes or disclaimers.
-        </p>
-      </section>
+      {/* Section mouvements récents */}
+
+      {latestMovements ? (
+        <RecentMovementsTable latestMovements={latestMovements} />
+      ) : null}
     </div>
   );
 }
