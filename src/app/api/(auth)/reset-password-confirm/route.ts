@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { connectToDB } from "@/db/connectDb";
-import AdminBookApp from "@/db/models/adminModel";
+import { connectToDB } from "@/db/connectToDb";
+import Employee from "@/db/models/employeeModel";
 
 export async function POST(request: NextRequest) {
   await connectToDB();
 
   const { password, token } = await request.json();
 
-  const user = await AdminBookApp.findOne({
+  const user = await Employee.findOne({
     verifyToken: token,
     verifyTokenExpiry: { $gt: Date.now() },
   });
