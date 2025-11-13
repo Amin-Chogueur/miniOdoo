@@ -25,7 +25,7 @@ export default function SignInPage() {
     },
     onSuccess: () => {
       toast.success("Signed in successfully!");
-
+      window.location.reload();
       // redirect after login
       router.push("/");
     },
