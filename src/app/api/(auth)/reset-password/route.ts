@@ -22,13 +22,13 @@ export async function POST(request: NextRequest) {
   user.verifyToken = resetToken;
   user.verifyTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
   await user.save();
-
+  //
   const resetUrl = `https://mini-odoo.vercel.app/reset-password?token=${resetToken}`;
-
+  console.log(email, resetToken, resetUrl, resend);
   ///
 
   await resend.emails.send({
-    from: "Mini Odoo <onboarding@resend.dev>", // replace with your sender email
+    from: "Mini Odoo App <onboarding@resend.dev>",
     to: email, // form input email
     subject: "Message from  Mini Odoo App",
     html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,

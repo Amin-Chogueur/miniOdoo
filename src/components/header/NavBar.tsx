@@ -62,12 +62,16 @@ export default function NavBar() {
         className="md:hidden p-2 rounded-md border border-[var(--border)]"
         style={{ backgroundColor: "var(--background)", color: "#fff" }}
       >
-        {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        {menuOpen ? (
+          <X size={22} color="var(--text-primary)" />
+        ) : (
+          <Menu size={22} color="var(--text-primary)" />
+        )}
       </button>
 
       {/* Theme Toggle (Desktop only) */}
       <div className="hidden md:flex items-center gap-3">
-        <LogoutButton />
+        <LogoutButton onCloseMenu={() => setMenuOpen(false)} />
         <button
           onClick={toggleTheme}
           className="p-1 cursor-pointer transition rounded-full"
@@ -111,7 +115,7 @@ export default function NavBar() {
 
           {/* Theme toggle inside mobile menu */}
           <div className="  flex flex-col items-center gap-3">
-            <LogoutButton />
+            <LogoutButton onCloseMenu={() => setMenuOpen(false)} />
             <button
               onClick={toggleTheme}
               className="p-1 cursor-pointer transition rounded-full"

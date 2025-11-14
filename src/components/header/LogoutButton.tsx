@@ -6,7 +6,11 @@ import axios from "axios";
 import { FiLoader } from "react-icons/fi";
 import { toast } from "react-toastify";
 
-export default function LogoutButton() {
+type LogoutButtonPropsType = {
+  onCloseMenu: (arg: boolean) => void;
+};
+
+export default function LogoutButton({ onCloseMenu }: LogoutButtonPropsType) {
   const router = useRouter();
 
   // ✅ Use TanStack Query mutation for logout
@@ -27,7 +31,10 @@ export default function LogoutButton() {
   return (
     <button
       disabled={logoutMutation.isPending}
-      onClick={() => logoutMutation.mutate()}
+      onClick={() => {
+        logoutMutation.mutate();
+        onCloseMenu(false);
+      }}
       className="disabled:bg-gray-600 mt-auto px-4 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 cursor-pointer flex gap-1 justify-center items-center"
     >
       {logoutMutation.isPending && <FiLoader className="animate-spin" />}

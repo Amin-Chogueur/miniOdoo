@@ -72,7 +72,7 @@ export default function SignInPage() {
         }}
       >
         <div
-          className="w-full max-w-md mx-auto bg-[var(--surface)] rounded-2xl shadow-lg p-4"
+          className="w-full max-w-md mx-auto bg-(--surface) rounded-2xl shadow-lg p-4"
           style={{ color: "var(--text-primary)" }}
         >
           <h1 className="text-3xl font-semibold mb-6 text-center">
@@ -80,21 +80,21 @@ export default function SignInPage() {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex items-center gap-3 bg-[var(--background)] rounded-lg px-4 py-3">
-              <FaEnvelope className="text-[var(--accent)]" />
+            <div className="flex items-center gap-3 bg-(--background) rounded-lg px-4 py-3">
+              <FaEnvelope className="text-(--accent)" />
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="bg-transparent outline-none w-full"
+                className=" outline-none w-full"
                 required
               />
             </div>
 
-            <div className="flex items-center gap-3 bg-[var(--background)] rounded-lg px-4 py-3">
-              <FaLock className="text-[var(--accent)]" />
+            <div className="flex items-center gap-3 bg-(--background) rounded-lg px-4 py-3">
+              <FaLock className="text-(--accent)" />
               <input
                 type="password"
                 name="password"

@@ -9,6 +9,11 @@ const EmployeeSchema = new mongoose.Schema(
     password: { type: String },
     dateOfBirth: { type: Date },
     dateOfStart: { type: Date },
+    isVerify: { type: Boolean, default: false },
+    forgotPsswordToken: String,
+    forgotPsswordTokenExpiry: Date,
+    verifyToken: String,
+    verifyTokenExpiry: Date,
   },
   { timestamps: true }
 );

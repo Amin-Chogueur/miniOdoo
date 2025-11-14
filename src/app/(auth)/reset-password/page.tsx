@@ -17,6 +17,7 @@ export default function ResetPasswordPage() {
     try {
       setLoading(true);
       const token = new URLSearchParams(window.location.search).get("token");
+
       if (!token) {
         toast.error("An error occurred. Please try again.");
         return;
@@ -29,7 +30,7 @@ export default function ResetPasswordPage() {
 
       if (res) {
         toast.success("Password updated successfully. You can now sign in.");
-        router.push("/auth/signin");
+        router.push("/signin");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
