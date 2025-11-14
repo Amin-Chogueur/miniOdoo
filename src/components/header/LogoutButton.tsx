@@ -20,11 +20,14 @@ export default function LogoutButton({ onCloseMenu }: LogoutButtonPropsType) {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Déconnexion réussie");
+      toast.success("Logout successful");
+
       router.replace("/signin");
     },
     onError: (error) => {
-      toast.error(error.message || "Erreur lors de la déconnexion");
+      if (axios.isAxiosError(error)) {
+        toast.error(error?.response?.data.message);
+      }
     },
   });
 

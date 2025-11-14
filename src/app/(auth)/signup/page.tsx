@@ -24,24 +24,20 @@ export default function SignUpPage() {
       return res.data;
     },
     onSuccess: (data) => {
-      toast.success("Account created successfully!");
+      toast.success(data.message);
       route.push("/signin");
     },
     onError: (error) => {
-      toast.error(error.message || "Signup failed!");
-
-      console.error("Signup error:", error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error?.response?.data.message);
+      }
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newUser = {
-      ...form,
-      role: "Super Admin",
-      position: "Manager",
-    };
-    signupMutation.mutate(newUser);
+
+    signupMutation.mutate(form);
   };
 
   return (

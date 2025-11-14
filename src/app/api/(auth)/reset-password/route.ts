@@ -5,13 +5,13 @@ import { connectToDB } from "@/db/connectToDb";
 import Employee from "@/db/models/employeeModel";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
+const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL;
 export async function POST(request: NextRequest) {
   await connectToDB();
   const { email } = await request.json();
 
   const user = await Employee.findOne({ email });
-  if (!user) {
+  if (!user || user.email !== SUPER_ADMIN_EMAIL) {
     return NextResponse.json(
       { message: "Oups ! Your are not the super admin." },
       { status: 404 }

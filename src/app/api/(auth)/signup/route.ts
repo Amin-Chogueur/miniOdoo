@@ -6,7 +6,6 @@ import Employee from "@/db/models/employeeModel";
 import { connectToDB } from "@/db/connectToDb";
 
 const SUPER_ADMIN_EMAIL = process.env.SUPER_ADMIN_EMAIL;
-
 export async function POST(req: NextRequest) {
   try {
     // Ensure the database is connected
@@ -14,23 +13,17 @@ export async function POST(req: NextRequest) {
 
     // Parse the request data
     const data = await req.json();
-    const { fullName, email, password, role, position } = data;
+    const { email, password, fullName } = data;
+    const user = await Employee.findOne({ email });
 
     // Validate required fields
-    if (email !== SUPER_ADMIN_EMAIL) {
+
+    if (!user && email !== SUPER_ADMIN_EMAIL) {
       return NextResponse.json(
         {
           message:
-            "Currently Only the Super Admin is allowed to axess the app.",
+            "Oops! you are not allowed to create an account in this app yet.",
         },
-        { status: 400 }
-      );
-    }
-    // Check if user already exists
-    const isExist = await Employee.findOne({ email });
-    if (isExist) {
-      return NextResponse.json(
-        { message: "Error: this email is already exist." },
         { status: 400 }
       );
     }
@@ -38,19 +31,25 @@ export async function POST(req: NextRequest) {
     // Hash the password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
-
+    if (email === SUPER_ADMIN_EMAIL) {
+      const admin = {
+        email,
+        password: hashedPassword,
+        role: "Super Admin",
+        fullName,
+        position: "Manager",
+      };
+      await Employee.create(admin);
+      return NextResponse.json(
+        { message: "Super Admin account created successfully" },
+        { status: 200 }
+      );
+    }
     // Create and save the new user
-    const superAdmin = new Employee({
-      fullName,
-      email,
-      role,
-      position,
-      password: hashedPassword,
-    });
-    await superAdmin.save();
+    await Employee.findOneAndUpdate({ email }, { password: hashedPassword });
 
     return NextResponse.json(
-      { message: "Inscription réussie." },
+      { message: "Account created successfully!" },
       { status: 200 }
     );
   } catch (error) {

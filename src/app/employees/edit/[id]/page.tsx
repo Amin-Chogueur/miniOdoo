@@ -154,6 +154,7 @@ export default function EditEmployee({
               }}
             >
               <option value="">Select position</option>
+              <option value="Manager">Manager</option>
               <option value="Mechanical Engineer">Mechanical Engineer</option>
               <option value="Electrical Engineer">Electrical Engineer</option>
               <option value="StoreKeeper">StoreKeeper</option>
@@ -195,6 +196,7 @@ export default function EditEmployee({
               }}
             >
               <option value="">Select role</option>
+               <option value="Super Admin">Super Admin</option>
               <option value="Admin">Admin</option>
               <option value="User">User</option>
             </select>

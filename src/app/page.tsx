@@ -58,26 +58,26 @@ export default function Home() {
 
       {/* Cartes de statistiques */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        {!isEmployeesLoading && totalEmployees ? (
+        {!isEmployeesLoading ? (
           <DashBoardCard
             title="Total Employees"
-            data={totalEmployees}
+            data={totalEmployees || 0}
             Icon={FaUsers}
             link="/employees"
           />
         ) : null}
-        {!isToolsLoading && totalTools ? (
+        {!isToolsLoading ? (
           <DashBoardCard
             title="  Tools"
-            data={totalTools}
+            data={totalTools || 0}
             Icon={FaTools}
             link="/tools"
           />
         ) : null}
-        {!isMovementLoading && totalMovements ? (
+        {!isMovementLoading ? (
           <DashBoardCard
             title="Total Movements"
-            data={totalMovements}
+            data={totalMovements || 0}
             Icon={FaExchangeAlt}
             link="/movements"
           />

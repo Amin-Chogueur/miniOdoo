@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { message: "Oups ! You are not the super admin." },
+        { message: "Oops! You dont have an account in this app." },
         { status: 404 }
       );
     }
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const validPassword = await bcryptjs.compare(password, user.password);
     if (!validPassword) {
       return NextResponse.json(
-        { message: "Mot de passe incorrect." },
+        { message: "Incorrect password" },
         { status: 400 }
       );
     }
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     });
 
     const response = NextResponse.json({
-      message: "Connexion réussie.",
+      message: "Connection successful",
       success: true,
       token,
     });

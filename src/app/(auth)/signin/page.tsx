@@ -23,15 +23,16 @@ export default function SignInPage() {
       const res = await axios.post("/api/signin", userData);
       return res.data;
     },
-    onSuccess: () => {
-      toast.success("Signed in successfully!");
+    onSuccess: (data) => {
+      toast.success(data.message);
       window.location.reload();
       // redirect after login
       router.push("/");
     },
     onError: (error) => {
-      toast.error(error.message || "Invalid credentials!");
-      console.error("Signin error:", error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error?.response?.data.message);
+      }
     },
   });
 

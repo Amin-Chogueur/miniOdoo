@@ -1,6 +1,8 @@
 import { connectToDB } from "@/db/connectToDb";
+import bcryptjs from "bcryptjs";
 import Employee from "@/db/models/employeeModel";
 import { NextRequest, NextResponse } from "next/server";
+import { EmployeeType } from "@/types/EmployeeType";
 
 export async function GET(
   req: NextRequest,
@@ -25,7 +27,14 @@ export async function PATCH(
   try {
     const { id } = await params;
     await connectToDB();
-    const updatedEmployee = await req.json();
+    const updatedEmployee: EmployeeType = await req.json();
+    const { password } = updatedEmployee;
+    if (password) {
+      const salt = await bcryptjs.genSalt(10);
+      const hashedPassword = await bcryptjs.hash(password as string, salt);
+      updatedEmployee.password = hashedPassword;
+    }
+
     const employee = await Employee.findByIdAndUpdate(id, updatedEmployee);
     if (employee) {
       return NextResponse.json({

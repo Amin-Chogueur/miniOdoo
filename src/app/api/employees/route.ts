@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
     const newEmployee = await Employee.create(employee);
     if (newEmployee) {
       return NextResponse.json(

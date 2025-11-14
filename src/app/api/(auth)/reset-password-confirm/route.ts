@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
   if (!user) {
     return NextResponse.json(
-      { message: "Jeton invalide ou expiré." },
+      { message: "Invalid or expired token." },
       { status: 400 }
     );
   }
@@ -27,6 +27,6 @@ export async function POST(request: NextRequest) {
   await user.save();
 
   return NextResponse.json({
-    message: "Mot de passe réinitialisé avec succès.",
+    message: "Password reset successfully.",
   });
 }
