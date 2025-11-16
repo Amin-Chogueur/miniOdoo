@@ -3,12 +3,14 @@ import ToolCard from "@/components/Tool";
 import CustomHeader from "@/components/ui/CustomHeader";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import NoResults from "@/components/ui/NoResults";
+import { useAuth } from "@/hooks/useAuth";
 import { getAllTools } from "@/query/toolQuery";
 import { ToolType } from "@/types/ToolType";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function Tools() {
+  const { user, isLoading: IsLoadingUserRole } = useAuth();
   const [search, setSearch] = useState("");
 
   const {
@@ -25,7 +27,7 @@ export default function Tools() {
       tool.name.toLowerCase().includes(search.trim().toLowerCase()) ||
       tool.code.toString().includes(search.trim())
   );
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || IsLoadingUserRole) return <LoadingSpinner />;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
@@ -38,6 +40,8 @@ export default function Tools() {
     >
       {/* Header */}
       <CustomHeader
+        role={user.role}
+        position={user.position}
         title="Tools List"
         path="/tools/new"
         placeholder="Search for tool ..."
@@ -50,7 +54,12 @@ export default function Tools() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-1">
           {filterdTools?.map((tool) => (
-            <ToolCard key={tool.code} tool={tool} />
+            <ToolCard
+              key={tool.code}
+              tool={tool}
+              role={user.role}
+              position={user.position}
+            />
           ))}
         </div>
       )}

@@ -1,12 +1,23 @@
 "use client";
 
+import { Position, Role } from "@/constants/constants";
 import { deleteTool } from "@/query/toolQuery";
 import { ToolType } from "@/types/ToolType";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
-export default function ToolCard({ tool }: { tool: ToolType }) {
+type ToolCardPropsType = {
+  tool: ToolType;
+  role: string;
+  position: string;
+};
+
+export default function ToolCardToolCard({
+  tool,
+  role,
+  position,
+}: ToolCardPropsType) {
   const queryClient = useQueryClient();
   // ✅ Mutation to update
   const deleteToolMutation = useMutation({
@@ -54,28 +65,31 @@ export default function ToolCard({ tool }: { tool: ToolType }) {
         {tool.quantity - (tool?.quantityTaken || 0)}
       </p>
 
-      <div className="flex gap-2">
-        <button
-          onClick={handleDeleteTool}
-          className="px-3 py-1 rounded text-white cursor-pointer"
-          style={{
-            backgroundColor: "var(--button-delete)",
-            border: `1px solid var(--border)`,
-          }}
-        >
-          Delete
-        </button>
-        <Link
-          href={`/tools/edit/${tool?._id}`}
-          className="px-3 py-1 rounded text-white cursor-pointer"
-          style={{
-            backgroundColor: "var(--button-create)",
-            border: `1px solid var(--border)`,
-          }}
-        >
-          Edit
-        </Link>
-      </div>
+      {(role === Role.SUPER_ADMIN && position === Position.MANAGER) ||
+      (role === Role.ADMIN && position === Position.STORE_KEEPER) ? (
+        <div className="flex gap-2">
+          <button
+            onClick={handleDeleteTool}
+            className="px-3 py-1 rounded text-white cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-delete)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            Delete
+          </button>
+          <Link
+            href={`/tools/edit/${tool?._id}`}
+            className="px-3 py-1 rounded text-white cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-create)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            Edit
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

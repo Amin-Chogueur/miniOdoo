@@ -4,47 +4,33 @@ import DashBoardCard from "@/components/dashboard/DashBoardCard";
 import EmployeesTable from "@/components/dashboard/EmployeesTable";
 import RecentMovementsTable from "@/components/dashboard/RecentMovementsTable";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { getAllEmployees } from "@/query/employeesQuery";
-import { getAllMovements } from "@/query/movementQuery";
-import { getAllTools } from "@/query/toolQuery";
-import { EmployeeType } from "@/types/EmployeeType";
-import { ToolMovementType } from "@/types/MovementType";
-import { ToolType } from "@/types/ToolType";
+import { useAuth } from "@/hooks/useAuth";
+import { getDashboardData } from "@/query/dashboardQuery";
+
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { FaExchangeAlt, FaTools, FaUsers } from "react-icons/fa";
 
 export default function Home() {
-  const { data: movements, isLoading: isMovementLoading } = useQuery<
-    ToolMovementType[]
-  >({
-    queryKey: ["movements"],
-    queryFn: getAllMovements,
-    staleTime: 600000,
+  const { data, isLoading } = useQuery({
+    queryKey: ["dashboard-data"],
+    queryFn: getDashboardData,
+    staleTime: 600_000, // 10 minutes
   });
 
-  const { data: tools, isLoading: isToolsLoading } = useQuery<ToolType[]>({
-    queryKey: ["tools"],
-    queryFn: getAllTools,
-    staleTime: 600000,
-  });
+  const totalEmployees = data?.employees?.length;
+  const totalTools = data?.tools?.length;
+  const totalMovements = data?.movements?.length;
 
-  const { data: employees, isLoading: isEmployeesLoading } = useQuery<
-    EmployeeType[]
-  >({
-    queryKey: ["employees"],
-    queryFn: getAllEmployees,
-    staleTime: 600000,
-  });
-
-  const totalEmployees = employees?.length;
-  const totalTools = tools?.length;
-  const totalMovements = movements?.length;
-
-  const latestEmployees = useMemo(() => employees?.slice(0, 3), [employees]);
-  const latestMovements = useMemo(() => movements?.slice(0, 5), [movements]);
-  if (isEmployeesLoading || isMovementLoading || isToolsLoading)
-    return <LoadingSpinner />;
+  const latestEmployees = useMemo(
+    () => data?.employees?.slice(0, 3),
+    [data?.employees]
+  );
+  const latestMovements = useMemo(
+    () => data?.movements?.slice(0, 5),
+    [data?.movements]
+  );
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div
@@ -58,30 +44,26 @@ export default function Home() {
 
       {/* Cartes de statistiques */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        {!isEmployeesLoading ? (
-          <DashBoardCard
-            title="Total Employees"
-            data={totalEmployees || 0}
-            Icon={FaUsers}
-            link="/employees"
-          />
-        ) : null}
-        {!isToolsLoading ? (
-          <DashBoardCard
-            title="  Tools"
-            data={totalTools || 0}
-            Icon={FaTools}
-            link="/tools"
-          />
-        ) : null}
-        {!isMovementLoading ? (
-          <DashBoardCard
-            title="Total Movements"
-            data={totalMovements || 0}
-            Icon={FaExchangeAlt}
-            link="/movements"
-          />
-        ) : null}
+        <DashBoardCard
+          title="Total Employees"
+          data={totalEmployees || 0}
+          Icon={FaUsers}
+          link="/employees"
+        />
+
+        <DashBoardCard
+          title="  Tools"
+          data={totalTools || 0}
+          Icon={FaTools}
+          link="/tools"
+        />
+
+        <DashBoardCard
+          title="Total Movements"
+          data={totalMovements || 0}
+          Icon={FaExchangeAlt}
+          link="/movements"
+        />
       </div>
 
       {/* Section employés récents */}

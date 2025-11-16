@@ -1,5 +1,5 @@
 import { ToolMovementType } from "@/types/MovementType";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function ToolMovementCard({
@@ -7,40 +7,37 @@ export default function ToolMovementCard({
 }: {
   movement: ToolMovementType;
 }) {
+  const route = useRouter();
   return (
     <tr
-      className=" hover:bg-opacity-10 transition-colors "
+      onClick={() => route.push(`/movements/${movement._id}`)}
+      className=" hover:bg-opacity-10 transition-colors cursor-pointer"
       style={{
         backgroundColor: "var(--surface)",
         borderBottom: `1px solid var(--border)`,
       }}
     >
-      <td className="px-3 py-1  gap-2">
-        <Link
-          href={`/movements/${movement._id}`}
-          className="px-3 py-1 rounded text-white cursor-pointer"
-          style={{
-            backgroundColor: movement.employeeSignatureForReturn
-              ? "var(--button-create)"
-              : "var(--button-delete)",
-            border: `1px solid var(--border)`,
-          }}
-        >
-          {movement.employeeSignatureForReturn ? "Returned" : "Taken"}
-        </Link>
+      <td
+        className="px-3 py-1 text-white text-center  gap-2"
+        style={{
+          backgroundColor: movement.employeeSignatureForReturn
+            ? "var(--button-create)"
+            : "var(--button-delete)",
+          border: `1px solid var(--border)`,
+        }}
+      >
+        {movement.employeeSignatureForReturn ? "Returned" : "Taken"}
       </td>
-      <td className="px-4 py-2">{movement.toolName}</td>
-      <td className="px-4 py-2">{movement.takenQuantity}</td>
-      <td className="px-4 py-2">{movement.storekeeperGivenName}</td>
-      <td className="px-4 py-2">{movement.employeeName}</td>
-      <td className="px-4 py-2">
-        {new Date(movement.takenAt).toLocaleString()}
-      </td>
+      <td className="px-3 ">{movement.toolName}</td>
+      <td className="px-3 ">{movement.takenQuantity}</td>
+      <td className="px-3 ">{movement.storekeeperGivenName}</td>
+      <td className="px-3 ">{movement.employeeName}</td>
+      <td className="px-3 ">{new Date(movement.takenAt).toLocaleString()}</td>
       <td className="px-4 py-2 bg-white">
         <img
           src={movement.employeeSignatureForTake!}
           alt="Employee Signature"
-          className="w-20 h-auto  rounded-md "
+          className="w-20 h-auto  rounded-md mx-auto"
         />
       </td>
 
@@ -49,13 +46,13 @@ export default function ToolMovementCard({
           ? new Date(movement.returnedAt).toLocaleString()
           : "Not returned"}
       </td>
-      <td className="px-4 py-2">{movement.returnedQuantity || 0}</td>
-      <td className="px-4 py-2 bg-white">
+      <td className="px-3 ">{movement.returnedQuantity || 0}</td>
+      <td className="px-3  bg-white">
         {movement.employeeSignatureForReturn ? (
           <img
             src={movement.employeeSignatureForReturn!}
             alt="Employee Signature"
-            className="w-20 h-auto  rounded-md "
+            className="w-20 h-auto  rounded-md mx-auto"
           />
         ) : (
           <span className="text-sm text-gray-500 text-center">
@@ -63,7 +60,7 @@ export default function ToolMovementCard({
           </span>
         )}
       </td>
-      <td className="px-4 py-2">
+      <td className="px-3 py-1">
         {movement.storekeeperReceiverName ? (
           <p>{movement.storekeeperReceiverName}</p>
         ) : (

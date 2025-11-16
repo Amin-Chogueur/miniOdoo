@@ -1,3 +1,4 @@
+import { Position, Role } from "@/constants/constants";
 import { FormatDate } from "@/helpers/formatDate";
 import { deleteEmployee } from "@/query/employeesQuery";
 import { EmployeeType } from "@/types/EmployeeType";
@@ -6,7 +7,17 @@ import Link from "next/link";
 import React from "react";
 import { toast } from "react-toastify";
 
-export default function Employee({ employee }: { employee: EmployeeType }) {
+type EmployeePropsType = {
+  employee: EmployeeType;
+  role: string;
+  position: string;
+};
+
+export default function Employee({
+  employee,
+  role,
+  position,
+}: EmployeePropsType) {
   const queryClient = useQueryClient();
   // ✅ Mutation to update
   const deleteEmployeeMutation = useMutation({
@@ -63,29 +74,31 @@ export default function Employee({ employee }: { employee: EmployeeType }) {
         <strong>Role:</strong> {employee?.role}
       </p>
 
-      <div className="flex gap-2">
-        <button
-          onClick={handleDeleteEmployee}
-          className="px-3 py-1 rounded text-white cursor-pointer"
-          style={{
-            backgroundColor: "var(--button-delete)",
-            border: `1px solid var(--border)`,
-          }}
-        >
-          Delete
-        </button>
+      {role === Role.SUPER_ADMIN && position === Position.MANAGER ? (
+        <div className="flex gap-2">
+          <button
+            onClick={handleDeleteEmployee}
+            className="px-3 py-1 rounded text-white cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-delete)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            Delete
+          </button>
 
-        <Link
-          href={`/employees/edit/${employee?._id}`}
-          className="px-3 py-1 rounded text-white cursor-pointer"
-          style={{
-            backgroundColor: "var(--button-create)",
-            border: `1px solid var(--border)`,
-          }}
-        >
-          Edit
-        </Link>
-      </div>
+          <Link
+            href={`/employees/edit/${employee?._id}`}
+            className="px-3 py-1 rounded text-white cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-create)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            Edit
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

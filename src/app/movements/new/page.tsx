@@ -8,6 +8,8 @@ import { addMovement } from "@/query/movementQuery";
 import EmployeesList from "@/components/movements/EmployeesList";
 import Link from "next/link";
 import SignaturePad from "@/components/movements/SignaturePad";
+import { useAuth } from "@/hooks/useAuth";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const initialState = {
   toolName: "",
@@ -19,6 +21,7 @@ const initialState = {
 };
 
 export default function NewMovements() {
+  const { user, isLoading: IsLoadingUserRole } = useAuth();
   const route = useRouter();
   const [movement, setMovement] = useState(initialState);
   const [searchTool, setSearchTool] = useState("");
@@ -55,12 +58,12 @@ export default function NewMovements() {
     const newMovement = {
       ...movement,
       takenAt: new Date().toISOString(),
-      storekeeperGivenName: "Amin",
+      storekeeperGivenName: user?.username,
     };
 
     addMovementMutation.mutate(newMovement);
   }
-
+  if (IsLoadingUserRole) return <LoadingSpinner />;
   return (
     <div className="mt-3">
       <Link href={"/movements"} className="underline text-green-600 ">

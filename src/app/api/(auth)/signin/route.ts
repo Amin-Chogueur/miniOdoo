@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
 
     const tokenData = {
       id: user._id,
-      email: user.email,
-      username: user.username,
+      position: user.position,
+      username: user.fullName,
       role: user.role,
     };
 
@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
     });
     response.cookies.set("miniOdooApp", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // this is important for deployment !
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/", // this is important for deployment !
     });
     return response;
   } catch (error) {

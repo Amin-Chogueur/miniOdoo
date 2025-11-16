@@ -9,8 +9,10 @@ import { getAllMovements } from "@/query/movementQuery";
 import CustomHeader from "@/components/ui/CustomHeader";
 import NoResults from "@/components/ui/NoResults";
 import { useReactToPrint } from "react-to-print";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ToolMovements() {
+  const { user, isLoading: IsLoadingUserRole } = useAuth();
   const componentRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
     contentRef: componentRef, // ✅ new API
@@ -42,7 +44,7 @@ export default function ToolMovements() {
     return unvailableOnly && searchedMovement;
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || IsLoadingUserRole) return <LoadingSpinner />;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
@@ -55,6 +57,8 @@ export default function ToolMovements() {
     >
       {/* Header */}
       <CustomHeader
+        role={user.role}
+        position={user.position}
         title="Tools Movement"
         path="/movements/new"
         placeholder="Search for movement ..."
@@ -88,21 +92,21 @@ export default function ToolMovements() {
           <table className="min-w-full border-collapse">
             <thead>
               <tr style={{ borderBottom: `2px solid var(--border)` }}>
-                <th className="px-4 py-2 text-left">Actions</th>
-                <th className="px-4 py-2 text-left">Tool</th>
-                <th className="px-4 py-2 text-left">
+                <th className="px-3 py-1 text-left">Actions</th>
+                <th className="px-3 py-1 text-left">Tool</th>
+                <th className="px-3 py-1 text-left">
                   Qte <br /> Taken
                 </th>
-                <th className="px-4 py-2 text-left">Storekeeper (Given)</th>
-                <th className="px-4 py-2 text-left">Employee</th>
-                <th className="px-4 py-2 text-left">Taken At</th>
-                <th className="px-4 py-2 text-left">Signature (Take)</th>
-                <th className="px-4 py-2 text-left">Returned At</th>
-                <th className="px-4 py-2 text-left">
+                <th className="px-3 py-1 text-left">Storekeeper (Given)</th>
+                <th className="px-3 py-1 text-left">Employee</th>
+                <th className="px-3 py-1 text-left">Taken At</th>
+                <th className="px-3 py-1 text-left">Signature (Take)</th>
+                <th className="px-3 py-1 text-left">Returned At</th>
+                <th className="px-3 py-1 text-left">
                   Qte <br /> Returned
                 </th>
-                <th className="px-4 py-2 text-left">Signature (Return)</th>
-                <th className="px-4 py-2 text-left">Storekeeper (Receiver)</th>
+                <th className="px-3 py-1 text-left">Signature (Return)</th>
+                <th className="px-3 py-1 text-left">Storekeeper (Receiver)</th>
               </tr>
             </thead>
 

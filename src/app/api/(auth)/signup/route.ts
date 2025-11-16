@@ -28,6 +28,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (user && user.password !== "") {
+      return NextResponse.json(
+        {
+          message: "Oops! you already have an account.",
+        },
+        { status: 400 }
+      );
+    }
+
     // Hash the password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);

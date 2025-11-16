@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import LogoutButton from "./LogoutButton";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function NavBar() {
+  const { user, isLoading: IsLoadingUserRole } = useAuth();
   const { isDark, toggleTheme } = useThemeToggle();
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -34,6 +36,15 @@ export default function NavBar() {
         >
           MOA
         </div>
+        {user ? (
+          <p className="text-xs text-center">
+            Hi Mr {user?.username} <br />
+            <span className="text-gray-400">
+              {" "}
+              ({user?.role} / {user?.position})
+            </span>
+          </p>
+        ) : null}
       </div>
 
       {/* Desktop Nav */}

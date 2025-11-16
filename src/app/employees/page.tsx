@@ -4,12 +4,14 @@ import Employee from "@/components/employees/Employee";
 import CustomHeader from "@/components/ui/CustomHeader";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import NoResults from "@/components/ui/NoResults";
+import { useAuth } from "@/hooks/useAuth";
 import { getAllEmployees } from "@/query/employeesQuery";
 import { EmployeeType } from "@/types/EmployeeType";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function Employees() {
+  const { user, isLoading: IsLoadingUserRole } = useAuth();
   const [search, setSearch] = useState("");
 
   const {
@@ -27,7 +29,7 @@ export default function Employees() {
       employee.fullName.toLowerCase().includes(search.trim().toLowerCase()) ||
       employee.position.toLowerCase().includes(search.trim().toLowerCase())
   );
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || IsLoadingUserRole) return <LoadingSpinner />;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
@@ -40,6 +42,8 @@ export default function Employees() {
     >
       {/* Header */}
       <CustomHeader
+        role={user.role}
+        position={user.position}
         title="Employees list"
         path="/employees/new"
         placeholder="Search for employee ..."
@@ -51,7 +55,12 @@ export default function Employees() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1 ">
           {filterdEmployee?.map((employee) => (
-            <Employee key={employee._id} employee={employee} />
+            <Employee
+              key={employee._id}
+              employee={employee}
+              role={user.role}
+              position={user.position}
+            />
           ))}
         </div>
       )}

@@ -1,8 +1,11 @@
 "use client";
+import { Position, Role } from "@/constants/constants";
 import Link from "next/link";
 import React, { Dispatch, SetStateAction } from "react";
 
 type CustomHeaderProps = {
+  role: string;
+  position: string;
   title: string;
   path: string;
   placeholder: string;
@@ -11,6 +14,8 @@ type CustomHeaderProps = {
 };
 
 export default function CustomHeader({
+  role,
+  position,
   title,
   path,
   placeholder,
@@ -41,16 +46,35 @@ export default function CustomHeader({
             border: `1px solid var(--border)`,
           }}
         />
-        <Link
-          href={path}
-          className="px-3 py-1 rounded text-white cursor-pointer"
-          style={{
-            backgroundColor: "var(--button-create)",
-            border: `1px solid var(--border)`,
-          }}
-        >
-          Create
-        </Link>
+        {role === Role.USER &&
+        position === Position.STORE_KEEPER &&
+        path === "/movements/new" ? (
+          <Link
+            href={path}
+            className="px-3 py-1 rounded text-white cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-create)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            Create
+          </Link>
+        ) : null}
+
+        {role === Role.SUPER_ADMIN &&
+        position === Position.MANAGER &&
+        path !== "/movements/new" ? (
+          <Link
+            href={path}
+            className="px-3 py-1 rounded text-white cursor-pointer"
+            style={{
+              backgroundColor: "var(--button-create)",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            Create
+          </Link>
+        ) : null}
       </div>
     </header>
   );

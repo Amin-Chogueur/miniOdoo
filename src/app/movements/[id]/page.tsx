@@ -8,12 +8,14 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getMovement, updateMovement } from "@/query/movementQuery";
 import Link from "next/link";
 import SignaturePad from "@/components/movements/SignaturePad";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function MovementDetails({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { user, isLoading: IsLoadingUserRole } = useAuth();
   const route = useRouter();
   const { id } = use(params);
   const queryClient = useQueryClient();
@@ -57,14 +59,14 @@ export default function MovementDetails({
       employeeSignatureForReturn: returnSignature,
       returnNote: returnNote,
       returnedQuantity: returnedQuantity,
-      storekeeperReceiverName: "Fouad",
+      storekeeperReceiverName: user.username,
       returnedAt: new Date().toISOString(),
     };
 
     updateMovementMutation.mutate({ updatedMovement, id });
   }
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || IsLoadingUserRole) return <LoadingSpinner />;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
@@ -229,18 +231,21 @@ export default function MovementDetails({
                   />
                 </div>
               </div>
-
-              <button
-                disabled={updateMovementMutation.isPending}
-                type="submit"
-                className="w-full sm:w-auto px-6 py-3 rounded-xl text-white font-medium shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
-                style={{
-                  backgroundColor: "var(--button-create)",
-                  border: `1px solid var(--border)`,
-                }}
-              >
-                Save
-              </button>
+              <div className="flex justify-end ">
+                <button
+                  disabled={updateMovementMutation.isPending}
+                  type="submit"
+                  className="mr:auto sm:w-auto px-3 py-1 rounded-xl text-white font-medium shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+                  style={{
+                    backgroundColor: "var(--button-create)",
+                    border: `1px solid var(--border)`,
+                  }}
+                >
+                  {updateMovementMutation.isPending
+                    ? "Submitting..."
+                    : "Submit"}
+                </button>
+              </div>
             </form>
           )}
 

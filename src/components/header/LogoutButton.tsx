@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { FiLoader } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 type LogoutButtonPropsType = {
   onCloseMenu: (arg: boolean) => void;
@@ -12,7 +13,7 @@ type LogoutButtonPropsType = {
 
 export default function LogoutButton({ onCloseMenu }: LogoutButtonPropsType) {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   // ✅ Use TanStack Query mutation for logout
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -21,7 +22,7 @@ export default function LogoutButton({ onCloseMenu }: LogoutButtonPropsType) {
     },
     onSuccess: () => {
       toast.success("Logout successful");
-
+      queryClient.removeQueries({ queryKey: ["auth"] });
       router.replace("/signin");
     },
     onError: (error) => {
