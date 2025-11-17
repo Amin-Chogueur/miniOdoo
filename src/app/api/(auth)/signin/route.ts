@@ -16,7 +16,12 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       );
     }
-
+    if (user.password === "") {
+      return NextResponse.json(
+        { message: "You need to Create your account first, please Sign Up." },
+        { status: 400 }
+      );
+    }
     const validPassword = await bcryptjs.compare(password, user.password);
     if (!validPassword) {
       return NextResponse.json(

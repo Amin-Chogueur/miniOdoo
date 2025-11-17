@@ -31,7 +31,7 @@ export default function CustomHeader({
         {title}
       </h1>
       <div
-        className="flex justify-between items-center gap-5 p-3"
+        className="flex justify-between items-center gap-3 p-3"
         style={{ backgroundColor: "var(--header-bg)" }}
       >
         <input

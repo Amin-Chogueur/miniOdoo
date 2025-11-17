@@ -1,11 +1,33 @@
+import { Position, Role } from "@/constants/constants";
 import { connectToDB } from "@/db/connectToDb";
 import Tool from "@/db/models/toolModel";
+import { checkToken } from "@/helpers/checkToken";
 import { ToolType } from "@/types/ToolType";
 
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    const tokenData = await checkToken();
+
+    if (!tokenData) {
+      return NextResponse.json(
+        { message: "Invalid token or not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    const { ROLE, POSITION } = tokenData;
+
+    if (
+      (ROLE !== Role.SUPER_ADMIN && POSITION !== Position.MANAGER) ||
+      (ROLE !== Role.ADMIN && POSITION !== Position.STORE_KEEPER)
+    ) {
+      return NextResponse.json(
+        { message: "You are Not the Super Admin or the Admin🤨" },
+        { status: 403 }
+      );
+    }
     await connectToDB();
     const tool: ToolType = await req.json();
     const { name, shelf, code } = tool;

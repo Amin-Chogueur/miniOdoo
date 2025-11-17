@@ -25,6 +25,7 @@ export default function ToolCardToolCard({
     onSuccess: () => {
       toast.success("Tool deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["tools"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
     },
     onError: (error) => {
       toast.error(error?.message || "Failed to delete employee");

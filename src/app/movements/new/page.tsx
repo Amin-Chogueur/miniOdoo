@@ -33,6 +33,7 @@ export default function NewMovements() {
     onSuccess: () => {
       // ✅ Refresh movements list
       queryClient.invalidateQueries({ queryKey: ["movements"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
       queryClient.invalidateQueries({ queryKey: ["tools"] });
 
       // ✅ Reset fields
@@ -162,11 +163,10 @@ export default function NewMovements() {
                     required
                     value={movement.toolName}
                     readOnly
-                    className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                    className="w-full px-4 py-2 rounded-lg outline-none text-red-500"
                     style={{
                       backgroundColor: "var(--input-bg)",
                       border: "1px solid var(--border)",
-                      color: "var(--text-primary)",
                     }}
                   />
                 </div>
@@ -205,11 +205,10 @@ export default function NewMovements() {
                 required
                 value={movement.employeeName}
                 readOnly
-                className="w-full px-4 py-2 rounded-lg outline-none text-base"
+                className="w-full px-4 py-2 rounded-lg outline-none text-red-500"
                 style={{
                   backgroundColor: "var(--input-bg)",
                   border: `1px solid var(--border)`,
-                  color: "var(--text-primary)",
                 }}
               />
             </div>

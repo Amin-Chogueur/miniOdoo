@@ -22,13 +22,14 @@ export async function checkToken() {
     const token = cookieStore.get("miniOdooApp")?.value;
 
     if (!token || !TOKEN_SECRET) {
-      return false;
+      return;
     }
 
     // 2. Decode the token
     const decodedToken = jwt.verify(token, TOKEN_SECRET!) as MyTokenPayload;
-
-    return decodedToken;
+    const ROLE = decodedToken?.role;
+    const POSITION = decodedToken?.position;
+    return { ROLE, POSITION };
   } catch (error) {
     console.error("Token verification error:", error);
     return false;

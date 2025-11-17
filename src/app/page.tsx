@@ -4,7 +4,6 @@ import DashBoardCard from "@/components/dashboard/DashBoardCard";
 import EmployeesTable from "@/components/dashboard/EmployeesTable";
 import RecentMovementsTable from "@/components/dashboard/RecentMovementsTable";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { useAuth } from "@/hooks/useAuth";
 import { getDashboardData } from "@/query/dashboardQuery";
 
 import { useQuery } from "@tanstack/react-query";

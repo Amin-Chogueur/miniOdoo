@@ -3,12 +3,31 @@ import bcryptjs from "bcryptjs";
 import Employee from "@/db/models/employeeModel";
 import { NextRequest, NextResponse } from "next/server";
 import { EmployeeType } from "@/types/EmployeeType";
+import { checkToken } from "@/helpers/checkToken";
+import { Position, Role } from "@/constants/constants";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tokenData = await checkToken();
+
+    if (!tokenData) {
+      return NextResponse.json(
+        { message: "Invalid token or not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    const { ROLE, POSITION } = tokenData;
+
+    if (ROLE !== Role.SUPER_ADMIN && POSITION !== Position.MANAGER) {
+      return NextResponse.json(
+        { message: "You are Not the Super Admin🤨" },
+        { status: 403 }
+      );
+    }
     const { id } = await params;
     await connectToDB();
 
@@ -25,6 +44,23 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tokenData = await checkToken();
+
+    if (!tokenData) {
+      return NextResponse.json(
+        { message: "Invalid token or not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    const { ROLE, POSITION } = tokenData;
+
+    if (ROLE !== Role.SUPER_ADMIN && POSITION !== Position.MANAGER) {
+      return NextResponse.json(
+        { message: "You are Not the Super Admin🤨" },
+        { status: 403 }
+      );
+    }
     const { id } = await params;
     await connectToDB();
     const updatedEmployee: EmployeeType = await req.json();

@@ -25,6 +25,7 @@ export default function Employee({
     onSuccess: () => {
       toast.success("Employee deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
     },
     onError: (error) => {
       toast.error(error?.message || "Failed to delete employee");

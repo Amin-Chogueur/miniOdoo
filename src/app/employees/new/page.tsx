@@ -37,7 +37,7 @@ export default function NewEmployee() {
     onSuccess: () => {
       // ✅ Refresh movements list
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-
+      queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
       // ✅ Reset fields
       setEmployee(initialState);
 
