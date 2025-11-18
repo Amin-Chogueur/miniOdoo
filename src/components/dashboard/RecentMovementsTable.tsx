@@ -31,7 +31,7 @@ export default function RecentMovementsTable({
             <tr>
               <th className="text-left py-3 px-4">Tool</th>
               <th className="text-left py-3 px-4">Code</th>
-              <th className="text-left py-3 px-4">Employee</th>
+              <th className="text-left py-3 px-4">Employee (Taker)</th>
               <th className="text-left py-3 px-4">Taken Qty</th>
               <th className="text-left py-3 px-4">Returned Qty</th>
               <th className="text-left py-3 px-4">Taken At</th>
@@ -47,7 +47,7 @@ export default function RecentMovementsTable({
               >
                 <td className="py-3 px-4">{move.toolName}</td>
                 <td className="py-3 px-4">{move.toolCode}</td>
-                <td className="py-3 px-4">{move.employeeName}</td>
+                <td className="py-3 px-4">{move.employeeTakingTool}</td>
                 <td className="py-3 px-4">{move.takenQuantity}</td>
                 <td className="py-3 px-4">{move.returnedQuantity || "-"}</td>
                 <td className="py-3 px-4">
