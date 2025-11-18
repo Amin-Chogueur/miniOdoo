@@ -4,9 +4,8 @@ export type ToolMovementType = {
   toolCode: string;
   takenQuantity: number;
   returnedQuantity?: number;
-  employeeName: string;
-  employeeSignatureForTake: string | null; // data URL
-  employeeSignatureForReturn?: string | null; // data URL
+  employeeTakingTool: string | null; // data URL
+  employeeReturningTool?: string | null; // data URL
   storekeeperGivenName: string;
   storekeeperReceiverName?: string;
   takenNote?: string | null;

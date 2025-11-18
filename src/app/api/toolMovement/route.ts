@@ -29,14 +29,19 @@ export async function POST(req: NextRequest) {
     await connectToDB();
     const movement: ToolMovementType = await req.json();
     const {
-      employeeName,
       toolName,
       toolCode,
       storekeeperGivenName,
+      employeeTakingTool,
       takenQuantity,
     } = movement;
-    console.log(movement);
-    if (!employeeName || !storekeeperGivenName || !toolName || !toolCode) {
+
+    if (
+      !employeeTakingTool ||
+      !storekeeperGivenName ||
+      !toolName ||
+      !toolCode
+    ) {
       return NextResponse.json(
         {
           message: "Provide all required details.",

@@ -54,7 +54,10 @@ export default function ResetPasswordPage() {
         />
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
         <div className="relative z-10 text-center px-10">
-          <h2 className="text-4xl font-bold mb-4 text-white">Welcome to MOA</h2>
+          <h2 className="text-4xl font-bold mb-4 text-white">
+            {" "}
+            Welcome to Tool Management App
+          </h2>
           <p className="text-gray-300 text-lg max-w-md mx-auto">
             Manage your tools, employees, and movements efficiently in one
             place.

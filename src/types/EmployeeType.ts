@@ -6,5 +6,6 @@ export type EmployeeType = {
   dateOfStart?: string;
   position: string;
   password?: string;
+  pin?: string;
   role: string;
 };

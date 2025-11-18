@@ -31,7 +31,7 @@ export default function Employees() {
   );
   if (isLoading || IsLoadingUserRole) return <LoadingSpinner />;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
-
+  console.log(employees);
   return (
     <div
       className="  transition-colors "
@@ -55,12 +55,7 @@ export default function Employees() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1 ">
           {filterdEmployee?.map((employee) => (
-            <Employee
-              key={employee._id}
-              employee={employee}
-              role={user.role}
-              position={user.position}
-            />
+            <Employee role={user.role} key={employee._id} employee={employee} />
           ))}
         </div>
       )}

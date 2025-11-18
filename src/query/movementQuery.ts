@@ -7,12 +7,10 @@ export async function getAllMovements(): Promise<ToolMovementType[]> {
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.message);
       throw new Error(
         error.response?.data?.message || "Failed to fetch movements"
       );
     } else {
-      console.error("Unexpected error:", error);
       throw new Error("An unknown error occurred while fetching movements");
     }
   }
@@ -24,12 +22,10 @@ export async function getMovement(id: string): Promise<ToolMovementType> {
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.message);
       throw new Error(
         error.response?.data?.message || "Failed to get movement"
       );
     } else {
-      console.error("Unexpected error:", error);
       throw new Error("An unknown error occurred while getting movement");
     }
   }
@@ -46,7 +42,22 @@ export async function addMovement(movement: ToolMovementType) {
         error.response?.data?.message || "Failed to add movement"
       );
     } else {
-      console.error("Unexpected error:", error);
+      throw new Error("An unknown error occurred while adding movement");
+    }
+  }
+}
+
+export async function fetchEmployeeByPin(pin: string) {
+  try {
+    const res = await axios(`/api/employees/by-pin/${pin}`);
+    const employeeNameByPin = res.data;
+    return employeeNameByPin;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Failed to add movement"
+      );
+    } else {
       throw new Error("An unknown error occurred while adding movement");
     }
   }
@@ -65,12 +76,10 @@ export async function updateMovement({
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.message);
       throw new Error(
         error.response?.data?.message || "Failed to update movement"
       );
     } else {
-      console.error("Unexpected error:", error);
       throw new Error("An unknown error occurred while updating movement");
     }
   }

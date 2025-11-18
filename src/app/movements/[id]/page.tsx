@@ -5,9 +5,12 @@ import { FormEvent, use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { getMovement, updateMovement } from "@/query/movementQuery";
+import {
+  fetchEmployeeByPin,
+  getMovement,
+  updateMovement,
+} from "@/query/movementQuery";
 import Link from "next/link";
-import SignaturePad from "@/components/movements/SignaturePad";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function MovementDetails({
@@ -20,8 +23,40 @@ export default function MovementDetails({
   const { id } = use(params);
   const queryClient = useQueryClient();
   const [returnedQuantity, setReturnedQuantity] = useState(0);
-  const [returnSignature, setReturnSignature] = useState("");
+  const [employeeReturningTool, setEmployeeReturningTool] = useState("");
   const [returnNote, setReturnNote] = useState("");
+
+  const [pin, setPin] = useState("");
+  const [errorEmployee, setErrorEmployee] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function getEmployeeNameFromDb() {
+    if (!pin.trim()) {
+      setErrorEmployee("Please provide the PIN first");
+      return;
+    }
+
+    setLoading(true);
+    setErrorEmployee(null);
+    setEmployeeReturningTool("");
+
+    try {
+      const { fullName } = await fetchEmployeeByPin(pin);
+
+      if (fullName) {
+        setEmployeeReturningTool(fullName);
+        setPin("");
+      } else {
+        setErrorEmployee("Employee not found");
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
+      setErrorEmployee(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const {
     data: movement,
@@ -48,21 +83,21 @@ export default function MovementDetails({
 
   async function handleReturnTool(e: FormEvent) {
     e.preventDefault();
-    if (!returnSignature) return;
-    if (returnedQuantity === 0) {
-      alert("Please specify the returned quantity");
+
+    if (returnedQuantity === 0 || !employeeReturningTool) {
+      alert("Please specify the returned quantity and the Employee Name");
       return;
     }
 
     const updatedMovement = {
       ...movement,
-      employeeSignatureForReturn: returnSignature,
+      employeeReturningTool,
       returnNote: returnNote,
       returnedQuantity: returnedQuantity,
       storekeeperReceiverName: user.username,
       returnedAt: new Date().toISOString(),
     };
-
+    console.log(updatedMovement);
     updateMovementMutation.mutate({ updatedMovement, id });
   }
 
@@ -70,203 +105,261 @@ export default function MovementDetails({
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="mt-6 px-1 sm:px-2 lg:px-4">
-      <Link
-        href={"/movements"}
-        className="text-green-600 font-medium hover:underline"
-      >
-        &larr; Back
-      </Link>
+    <div
+      className="min-h-screen mt-4"
+      style={{
+        backgroundColor: "var(--background)",
+        color: "var(--text-primary)",
+      }}
+    >
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <Link
+            href={"/movements"}
+            className="inline-flex items-center text-green-600 font-medium hover:underline mb-4"
+          >
+            &larr; Back to Movements
+          </Link>
+          <h1 className="text-3xl font-bold">Tool Movement Details</h1>
+        </div>
 
-      <div
-        className="flex justify-center mt-6"
-        style={{
-          backgroundColor: "var(--background)",
-          color: "var(--text-primary)",
-        }}
-      >
+        {/* Main Container */}
         <div
-          className="max-w-3xl w-full p-2 sm:p-4 rounded-3xl shadow-xl space-y-8 transition-all duration-300"
+          className="p-3 rounded-2xl shadow-lg"
           style={{
             backgroundColor: "var(--surface)",
             border: `1px solid var(--border)`,
           }}
         >
-          <h1 className="text-3xl font-bold text-center mb-8 tracking-wide">
-            Tool Movement Details
-          </h1>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
-            <div className="flex justify-between border-b pb-2">
-              <span className="font-semibold">Tool Name:</span>
-              <span className="capitalize">{movement?.toolName}</span>
-            </div>
-            <div className="flex justify-between border-b pb-2">
-              <span className="font-semibold">Qte Taken:</span>
-              <span>{movement?.takenQuantity}</span>
-            </div>
-            <div className="flex justify-between border-b pb-2">
-              <span className="font-semibold">Employee:</span>
-              <span>{movement?.employeeName}</span>
-            </div>
-            <div className="flex justify-between border-b pb-2">
-              <span className="font-semibold">Storekeeper (Given):</span>
-              <span>{movement?.storekeeperGivenName}</span>
-            </div>
-            <div className="flex justify-between border-b pb-2">
-              <span className="font-semibold">Taken At:</span>
-              <span>
-                {movement?.takenAt &&
-                  new Date(movement.takenAt).toLocaleString()}
-              </span>
-            </div>
-            {movement?.returnedAt && (
-              <div className="flex justify-between border-b pb-2">
-                <span className="font-semibold">Returned At:</span>
-                <span>{new Date(movement.returnedAt).toLocaleString()}</span>
-              </div>
-            )}
-            {movement?.returnedQuantity && (
-              <div className="flex justify-between border-b pb-2">
-                <span className="font-semibold">Qte Returned:</span>
-                <span>{movement?.returnedQuantity}</span>
-              </div>
-            )}
-            {movement?.storekeeperReceiverName && (
-              <div className="flex justify-between border-b pb-2">
-                <span className="font-semibold">Storekeeper (Receiver):</span>
-                <span>{movement?.storekeeperReceiverName}</span>
-              </div>
-            )}
-            {movement?.takenNote && (
-              <div className="border-b pb-2">
-                <span className="font-semibold">Note (When taken):</span>
-                <p className="mt-1">{movement.takenNote}</p>
-              </div>
-            )}
-            {movement?.returnNote && (
-              <div className="border-b pb-2">
-                <span className="font-semibold">Note (On Return):</span>
-                <p className="mt-1">{movement.returnNote}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Employee Signature (Taken) */}
-          <div className="space-y-3">
-            <h2 className="text-xl font-semibold mb-4">
-              Employee Signature (Take)
+          {/* Movement Information */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">
+              Movement Information
             </h2>
-            <div
-              className="h-50 flex items-center justify-center rounded-xl border border-dashed"
-              style={{
-                backgroundColor: "var(--header-bg)",
-                borderColor: "var(--border)",
-              }}
-            >
-              {movement?.employeeSignatureForTake ? (
-                <img
-                  src={movement.employeeSignatureForTake!}
-                  alt="Employee Signature"
-                  className="w-60 h-auto object-contain"
-                />
-              ) : (
-                <span className="text-gray-400 dark:text-gray-500">
-                  Not returned yet
-                </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
+                  Tool Name
+                </label>
+                <p className="text-lg capitalize font-semibold">
+                  {movement?.toolName}
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
+                  Quantity Taken
+                </label>
+                <p className="text-lg font-semibold">
+                  {movement?.takenQuantity}
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
+                  Employee (Taker)
+                </label>
+                <p className="text-lg">{movement?.employeeTakingTool}</p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
+                  Storekeeper (Given)
+                </label>
+                <p className="text-lg">{movement?.storekeeperGivenName}</p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-500">
+                  Taken At
+                </label>
+                <p className="text-lg">
+                  {movement?.takenAt &&
+                    new Date(movement.takenAt).toLocaleString()}
+                </p>
+              </div>
+
+              {movement?.takenNote && (
+                <div className="md:col-span-2 space-y-1">
+                  <label className="text-sm font-medium text-gray-500">
+                    Note (When Taken)
+                  </label>
+                  <p
+                    className="text-lg p-3 rounded-lg"
+                    style={{ backgroundColor: "var(--input-bg)" }}
+                  >
+                    {movement.takenNote}
+                  </p>
+                </div>
               )}
             </div>
           </div>
 
-          {/* Return Form */}
-          {!movement?.employeeSignatureForReturn && (
-            <form onSubmit={handleReturnTool} className="space-y-6">
-              <div className="max-w-xs">
-                <label className="block text-sm md:text-lg font-medium mb-1">
-                  Qte Returned
-                </label>
-                <input
-                  min={0}
-                  required
-                  value={returnedQuantity}
-                  onChange={(e) => setReturnedQuantity(+e.target.value)}
-                  type="number"
-                  className="w-full px-4 py-2 rounded-lg outline-none text-base shadow-sm"
-                  style={{
-                    backgroundColor: "var(--input-bg)",
-                    border: "1px solid var(--border)",
-                    color: "var(--text-primary)",
-                  }}
-                />
+          {/* Return Information (if returned) */}
+          {movement?.returnedAt && (
+            <div
+              className="mb-8 p-4 rounded-lg"
+              style={{ backgroundColor: "var(--input-bg)" }}
+            >
+              <h3 className="text-xl font-semibold mb-4">Return Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-500">
+                    Returned At
+                  </label>
+                  <p className="text-lg">
+                    {new Date(movement.returnedAt).toLocaleString()}
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-500">
+                    Quantity Returned
+                  </label>
+                  <p className="text-lg">{movement?.returnedQuantity}</p>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-500">
+                    Employee (Returner)
+                  </label>
+                  <p className="text-lg">{movement?.employeeReturningTool}</p>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-500">
+                    Storekeeper (Receiver)
+                  </label>
+                  <p className="text-lg">{movement?.storekeeperReceiverName}</p>
+                </div>
+
+                {movement?.returnNote && (
+                  <div className="md:col-span-2 space-y-1">
+                    <label className="text-sm font-medium text-gray-500">
+                      Note (On Return)
+                    </label>
+                    <p className="text-lg">{movement.returnNote}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Employee Lookup & Return Form */}
+          {!movement?.employeeReturningTool && (
+            <div className="space-y-6">
+              {/* Employee Lookup */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold">Employee Lookup</h3>
+                <div className="flex gap-2">
+                  <input
+                    type="password"
+                    placeholder="Enter PIN..."
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    className="flex-1 px-4 py-3 rounded-lg outline-none text-base"
+                    style={{
+                      backgroundColor: "var(--input-bg)",
+                      border: `1px solid var(--border)`,
+                      color: "var(--text-primary)",
+                    }}
+                  />
+                  <button
+                    onClick={getEmployeeNameFromDb}
+                    disabled={loading}
+                    className="px-6 py-3 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{
+                      backgroundColor: "var(--button-create)",
+                      border: `1px solid var(--border)`,
+                    }}
+                  >
+                    {loading ? "..." : "Get"}
+                  </button>
+                </div>
+
+                {errorEmployee && (
+                  <div
+                    className="p-3 rounded-lg text-sm"
+                    style={{ backgroundColor: "#fee", color: "#c33" }}
+                  >
+                    {errorEmployee}
+                  </div>
+                )}
+
+                {employeeReturningTool && (
+                  <div
+                    className="p-3 rounded-lg text-sm font-semibold "
+                    style={{ backgroundColor: "var(--input-bg)" }}
+                  >
+                    Employee:{" "}
+                    <span className="text-red-500">
+                      {employeeReturningTool}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <h2 className="text-xl font-semibold mb-2">Note (On return)</h2>
-                <textarea
-                  value={returnNote}
-                  onChange={(e) => setReturnNote(e.target.value)}
-                  placeholder="Your note here..."
-                  className="w-full h-28 p-3 rounded-xl resize-none shadow-sm"
-                  style={{
-                    backgroundColor: "var(--input-bg)",
-                    border: "1px solid var(--border)",
-                    color: "var(--text-primary)",
-                  }}
-                />
-              </div>
+              {/* Return Form */}
+              <form onSubmit={handleReturnTool} className="space-y-4">
+                <h3 className="text-xl font-semibold">Return Tool</h3>
 
-              <div>
-                <h2 className="text-xl font-semibold mb-2">
-                  Employee Signature (Return)
-                </h2>
-                <div
-                  className="flex items-center justify-center p-4 rounded-xl border border-dashed"
-                  style={{
-                    backgroundColor: "var(--header-bg)",
-                    borderColor: "var(--border)",
-                  }}
-                >
-                  <SignaturePad
-                    onEnd={(signatureData) => setReturnSignature(signatureData)}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium">
+                      Quantity Returned
+                    </label>
+                    <input
+                      min={0}
+                      max={movement?.takenQuantity}
+                      required
+                      value={returnedQuantity}
+                      onChange={(e) => setReturnedQuantity(+e.target.value)}
+                      type="number"
+                      className="w-full px-4 py-3 rounded-lg outline-none text-base"
+                      style={{
+                        backgroundColor: "var(--input-bg)",
+                        border: "1px solid var(--border)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium">
+                    Return Note
+                  </label>
+                  <textarea
+                    value={returnNote}
+                    onChange={(e) => setReturnNote(e.target.value)}
+                    placeholder="Add any notes about the return condition..."
+                    rows={3}
+                    className="w-full p-3 rounded-lg resize-none"
+                    style={{
+                      backgroundColor: "var(--input-bg)",
+                      border: "1px solid var(--border)",
+                      color: "var(--text-primary)",
+                    }}
                   />
                 </div>
-              </div>
-              <div className="flex justify-end ">
+
                 <button
-                  disabled={updateMovementMutation.isPending}
+                  disabled={
+                    updateMovementMutation.isPending || !employeeReturningTool
+                  }
                   type="submit"
-                  className="mr:auto sm:w-auto px-3 py-1 rounded-xl text-white font-medium shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+                  className="w-full md:w-auto px-8 py-3 rounded-lg text-white font-semibold shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                   style={{
                     backgroundColor: "var(--button-create)",
                     border: `1px solid var(--border)`,
                   }}
                 >
                   {updateMovementMutation.isPending
-                    ? "Submitting..."
-                    : "Submit"}
+                    ? "Processing Return..."
+                    : "Submit Return"}
                 </button>
-              </div>
-            </form>
-          )}
-
-          {movement?.employeeSignatureForReturn && (
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold mb-4">
-                Employee Signature (Return)
-              </h2>
-              <div
-                className="flex items-center justify-center h-50 p-4 rounded-xl border border-dashed"
-                style={{
-                  backgroundColor: "var(--header-bg)",
-                  borderColor: "var(--border)",
-                }}
-              >
-                <img
-                  src={movement.employeeSignatureForReturn!}
-                  alt="Employee Signature"
-                  className="w-[300px] h-auto object-contain "
-                />
-              </div>
+              </form>
             </div>
           )}
         </div>

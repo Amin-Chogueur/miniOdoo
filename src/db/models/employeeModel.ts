@@ -6,6 +6,7 @@ const EmployeeSchema = new mongoose.Schema(
     email: { type: String, unique: true }, //required: true, unique: true i will add these later on in the full version of the mini odoo
     position: { type: String, required: true },
     role: { type: String, required: true },
+    pin: { type: String, unique: true, required: true },
     password: { type: String },
     dateOfBirth: { type: Date },
     dateOfStart: { type: Date },

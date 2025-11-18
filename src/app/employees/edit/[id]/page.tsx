@@ -196,11 +196,16 @@ export default function EditEmployee({
               }}
             >
               <option value="">Select role</option>
-               <option value="Super Admin">Super Admin</option>
+              <option value="Super Admin">Super Admin</option>
               <option value="Admin">Admin</option>
               <option value="User">User</option>
             </select>
           </div>
+
+          <p style={{ color: "var(--text-secondary)" }} className="mb-3">
+            <strong>Pin:</strong> {employee?.pin}
+          </p>
+
           <Input
             handleChange={handleChange}
             name="password"

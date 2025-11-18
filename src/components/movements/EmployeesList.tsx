@@ -11,9 +11,8 @@ type EmployeesListProps = {
     React.SetStateAction<{
       toolName: string;
       toolCode: string;
-      employeeName: string;
+      employeeTakingTool: string;
       takenQuantity: number;
-      employeeSignatureForTake: string;
       takenNote: string;
     }>
   >;

@@ -4,7 +4,7 @@ import Employee from "@/db/models/employeeModel";
 import { NextRequest, NextResponse } from "next/server";
 import { EmployeeType } from "@/types/EmployeeType";
 import { checkToken } from "@/helpers/checkToken";
-import { Position, Role } from "@/constants/constants";
+import { Role } from "@/constants/constants";
 
 export async function GET(
   req: NextRequest,
@@ -20,9 +20,8 @@ export async function GET(
       );
     }
 
-    const { ROLE, POSITION } = tokenData;
-
-    if (ROLE !== Role.SUPER_ADMIN && POSITION !== Position.MANAGER) {
+    const isSuperAdmin = tokenData.ROLE === Role.SUPER_ADMIN;
+    if (!isSuperAdmin) {
       return NextResponse.json(
         { message: "You are Not the Super Admin🤨" },
         { status: 403 }
@@ -31,7 +30,15 @@ export async function GET(
     const { id } = await params;
     await connectToDB();
 
-    const employee = await Employee.findById(id).select("-password");
+    let employee;
+    if (isSuperAdmin) {
+      employee = await Employee.findById(id).select("-password");
+    } else {
+      employee = await Employee.find({})
+        .sort({ createdAt: -1 })
+        .select("-password -pin");
+    }
+
     return NextResponse.json(employee);
   } catch (error) {
     console.log(error);
@@ -53,9 +60,9 @@ export async function PATCH(
       );
     }
 
-    const { ROLE, POSITION } = tokenData;
+    const { ROLE } = tokenData;
 
-    if (ROLE !== Role.SUPER_ADMIN && POSITION !== Position.MANAGER) {
+    if (ROLE !== Role.SUPER_ADMIN) {
       return NextResponse.json(
         { message: "You are Not the Super Admin🤨" },
         { status: 403 }

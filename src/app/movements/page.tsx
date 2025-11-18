@@ -10,6 +10,7 @@ import CustomHeader from "@/components/ui/CustomHeader";
 import NoResults from "@/components/ui/NoResults";
 import { useReactToPrint } from "react-to-print";
 import { useAuth } from "@/hooks/useAuth";
+import Image from "next/image";
 
 export default function ToolMovements() {
   const { user, isLoading: IsLoadingUserRole } = useAuth();
@@ -90,22 +91,42 @@ export default function ToolMovements() {
       ) : (
         <div ref={componentRef} className="print-page overflow-x-auto">
           <table className="min-w-full border-collapse">
-            <thead>
+            <thead style={{ border: `2px solid var(--border)` }}>
+              <tr
+                style={{ borderBottom: `2px solid var(--border)` }}
+                className="head bg-white"
+              >
+                <th className="px-3 py-3 border border-r-black" colSpan={2}>
+                  <Image
+                    src={"/images/mansourah.png"}
+                    width={100}
+                    height={60}
+                    alt="mansourah"
+                    className="mx-auto"
+                  />
+                </th>
+                <th
+                  className="px-3 py-1  text-black text-3xl text-center"
+                  colSpan={15}
+                >
+                  Tool Management
+                </th>
+              </tr>
               <tr style={{ borderBottom: `2px solid var(--border)` }}>
-                <th className="px-3 py-1 text-left">Actions</th>
+                <th className="px-3 py-1 text-left">Status</th>
                 <th className="px-3 py-1 text-left">Tool</th>
                 <th className="px-3 py-1 text-left">
                   Qte <br /> Taken
                 </th>
                 <th className="px-3 py-1 text-left">Storekeeper (Given)</th>
-                <th className="px-3 py-1 text-left">Employee</th>
+                <th className="px-3 py-1 text-left">Employee Taker</th>
                 <th className="px-3 py-1 text-left">Taken At</th>
-                <th className="px-3 py-1 text-left">Signature (Take)</th>
+                <th className="px-3 py-1 text-left">Employee Returner</th>
                 <th className="px-3 py-1 text-left">Returned At</th>
                 <th className="px-3 py-1 text-left">
                   Qte <br /> Returned
                 </th>
-                <th className="px-3 py-1 text-left">Signature (Return)</th>
+
                 <th className="px-3 py-1 text-left">Storekeeper (Receiver)</th>
               </tr>
             </thead>

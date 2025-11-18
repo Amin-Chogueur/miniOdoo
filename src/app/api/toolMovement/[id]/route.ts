@@ -69,8 +69,9 @@ export async function PATCH(
       toolCode,
       takenQuantity,
       storekeeperGivenName,
-      employeeName,
-      employeeSignatureForTake,
+      employeeTakingTool,
+
+      storekeeperReceiverName,
       takenAt,
       toolName,
     } = updatedMovement;
@@ -122,10 +123,10 @@ export async function PATCH(
         takenQuantity: takenQuantity - returnedQuantity,
         returnedQuantity: 0,
         toolCode,
-        takenNote: `This is auto message for the new movement created for this tool, Mr ${employeeName} still have to gave back the remaining quantity of  ${toolName}. `,
+        takenNote: `This is auto message for the new movement created for this tool, Mr ${employeeTakingTool} still have to gave back the remaining quantity of  ${toolName}. `,
         storekeeperGivenName,
-        employeeName,
-        employeeSignatureForTake,
+        employeeTakingTool,
+        storekeeperReceiverName,
         takenAt,
         toolName,
       };

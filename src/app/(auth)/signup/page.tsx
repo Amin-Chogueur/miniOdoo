@@ -119,15 +119,6 @@ export default function SignUpPage() {
               />
             </div>
 
-            <div className="flex justify-between items-center text-sm">
-              <Link
-                href="/auth/forgot-password"
-                style={{ color: "var(--accent)" }}
-              >
-                Forgot password?
-              </Link>
-            </div>
-
             <button
               type="submit"
               disabled={signupMutation.isPending}

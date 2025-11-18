@@ -11,9 +11,13 @@ const ToolMovementSchema = new mongoose.Schema(
         return !this.isNew;
       },
     },
-    employeeName: { type: String, required: true },
-    employeeSignatureForTake: { type: String, required: true },
-    employeeSignatureForReturn: { type: String, default: null },
+    employeeTakingTool: { type: String, required: true },
+    employeeReturningTool: {
+      type: String,
+      required: function () {
+        return !this.isNew;
+      },
+    },
     storekeeperGivenName: { type: String, required: true },
     storekeeperReceiverName: { type: String, default: null },
     takenNote: { type: String },

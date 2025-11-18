@@ -28,10 +28,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (user && user.password !== "") {
+    if (user && user.password) {
       return NextResponse.json(
         {
-          message: "Oops! you already have an account.",
+          message: "Oops! you already have an account, Please Sign in.",
         },
         { status: 400 }
       );
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         role: "Super Admin",
+        pin: "111111",
         fullName,
         position: "Manager",
       };

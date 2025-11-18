@@ -18,13 +18,13 @@ export async function POST(req: NextRequest) {
     }
 
     const { ROLE, POSITION } = tokenData;
+    const isSuperAdmin = ROLE === Role.SUPER_ADMIN;
+    const isAdminStoreKeeper =
+      ROLE === Role.ADMIN && POSITION === Position.STORE_KEEPER;
 
-    if (
-      (ROLE !== Role.SUPER_ADMIN && POSITION !== Position.MANAGER) ||
-      (ROLE !== Role.ADMIN && POSITION !== Position.STORE_KEEPER)
-    ) {
+    if (!isSuperAdmin && !isAdminStoreKeeper) {
       return NextResponse.json(
-        { message: "You are Not the Super Admin or the Admin🤨" },
+        { message: "You are Not the Super Admin or the Storekeeper Admin🤨" },
         { status: 403 }
       );
     }
