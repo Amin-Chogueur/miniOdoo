@@ -71,14 +71,16 @@ export default function NewEmployee() {
         <h1 className="text-3xl font-bold text-center mb-2 tracking-wide">
           Create New Tool
         </h1>
-        <p className="text-center text-sm opacity-70 mb-6">
-          Please fill in the information below to add a new tool.
+        <p className="text-center text-md opacity-70 mb-6">
+          The fields marked with <span className="text-red-500">*</span> are
+          required.
         </p>
-
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Full Name */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Name</label>
+            <label className="block text-lg font-medium">
+              Name <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.name}
@@ -96,7 +98,9 @@ export default function NewEmployee() {
           </div>
           {/* code */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Code</label>
+            <label className="block text-lg font-medium">
+              Code <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.code}
@@ -115,7 +119,9 @@ export default function NewEmployee() {
 
           {/* shelf */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Shelf</label>
+            <label className="block text-lg font-medium">
+              Shelf <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.shelf}
@@ -131,7 +137,9 @@ export default function NewEmployee() {
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Quantity</label>
+            <label className="block text-lg font-medium">
+              Quantity <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.quantity}
@@ -150,26 +158,25 @@ export default function NewEmployee() {
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-6">
             <button
-              disabled={addToolMutation.isPending}
-              type="submit"
-              className="px-3 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
-              style={{
-                backgroundColor: `var(--button-create)`,
-                border: `1px solid var(--border)`,
-              }}
-            >
-              {addToolMutation.isPending ? "Submitting..." : "Submit"}
-            </button>
-
-            <button
               type="button"
-              className="px-3 py-3 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
               style={{
                 backgroundColor: "var(--button-delete)",
                 border: `1px solid var(--border)`,
               }}
             >
               Discard
+            </button>
+            <button
+              disabled={addToolMutation.isPending}
+              type="submit"
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: `var(--button-create)`,
+                border: `1px solid var(--border)`,
+              }}
+            >
+              {addToolMutation.isPending ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>

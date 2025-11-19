@@ -5,7 +5,8 @@ import { deleteEmployee } from "@/query/employeesQuery";
 import { EmployeeType } from "@/types/EmployeeType";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 type EmployeePropsType = {
@@ -14,6 +15,7 @@ type EmployeePropsType = {
 };
 
 export default function Employee({ employee, role }: EmployeePropsType) {
+  const [togglePin, setTogglePin] = useState(false);
   const queryClient = useQueryClient();
   // ✅ Mutation to update
   const deleteEmployeeMutation = useMutation({
@@ -39,17 +41,19 @@ export default function Employee({ employee, role }: EmployeePropsType) {
 
   return (
     <div
-      className="p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200"
+      className={`${
+        role === Role.SUPER_ADMIN ? "h-[280px]" : "h-fit"
+      } p-2  relative z-0 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200`}
       style={{
         backgroundColor: "var(--surface)",
         border: `1px solid var(--border)`,
       }}
     >
-      <h2 className="text-xl capitalize font-semibold mb-2 text-[var(--text-primary)]">
+      <h2 className="text-[18px] capitalize font-semibold mb-2 text-[var(--text-primary)]">
         {employee.fullName}{" "}
         <span
           style={{ color: "var(--text-secondary)" }}
-          className="text-[16px]"
+          className="text-[15px]"
         >
           ({employee.position})
         </span>
@@ -67,17 +71,38 @@ export default function Employee({ employee, role }: EmployeePropsType) {
         <strong>Start Date:</strong> {FormatDate(employee?.dateOfStart)}
       </p>
 
-      <p style={{ color: "var(--text-secondary)" }} className="mb-3">
+      <p
+        style={{
+          color: "var(--text-secondary)",
+        }}
+        className="mb-3"
+      >
         <strong>Role:</strong> {employee?.role}
       </p>
       {role === Role.SUPER_ADMIN ? (
-        <p style={{ color: "var(--text-secondary)" }} className="mb-3">
-          <strong>Pin:</strong> {employee?.pin}
+        <p
+          style={{
+            color: "var(--text-secondary)",
+            backgroundColor: "var(--background)",
+          }}
+          className="mb-3 p-1 rounded flex justify-between items-center"
+        >
+          <span>
+            <strong>Pin: </strong>{" "}
+            <span>{togglePin ? employee?.pin : "******"}</span>
+          </span>
+
+          <button
+            className="cursor-pointer"
+            onClick={() => setTogglePin((prev) => !prev)}
+          >
+            {togglePin ? <FaEyeSlash /> : <FaEye />}
+          </button>
         </p>
       ) : null}
 
       {role === Role.SUPER_ADMIN ? (
-        <div className="flex gap-2">
+        <div className="flex justify-end gap-2 absolute bottom-2 right-2">
           <button
             onClick={handleDeleteEmployee}
             className="px-3 py-1 rounded text-white cursor-pointer"

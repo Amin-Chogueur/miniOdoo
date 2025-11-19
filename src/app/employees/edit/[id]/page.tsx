@@ -126,6 +126,7 @@ export default function EditEmployee({
             placeholder="Enter full name..."
             value={employee.fullName ?? ""}
             lable="Full Name"
+            isRequired={true}
           />
 
           <Input
@@ -135,12 +136,15 @@ export default function EditEmployee({
             placeholder="Enter Email..."
             value={employee.email ?? ""}
             lable="Email"
+            isRequired={true}
           />
           {/* Email */}
 
           {/* Position */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Position</label>
+            <label className="block text-lg font-medium">
+              Position <span className="text-red-500">*</span>
+            </label>
             <select
               onChange={handleChange}
               value={employee.position ?? ""}
@@ -170,6 +174,7 @@ export default function EditEmployee({
               type="date"
               value={employee.dateOfBirth ?? ""}
               lable="Date of Birth"
+              isRequired={false}
             />
             <Input
               handleChange={handleChange}
@@ -177,12 +182,15 @@ export default function EditEmployee({
               type="date"
               value={employee.dateOfStart ?? ""}
               lable="Start Date"
+              isRequired={false}
             />
           </div>
 
           {/* Role */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Role</label>
+            <label className="block text-lg font-medium">
+              Role <span className="text-red-500">*</span>
+            </label>
             <select
               onChange={handleChange}
               value={employee.role ?? ""}
@@ -202,10 +210,6 @@ export default function EditEmployee({
             </select>
           </div>
 
-          <p style={{ color: "var(--text-secondary)" }} className="mb-3">
-            <strong>Pin:</strong> {employee?.pin}
-          </p>
-
           <Input
             handleChange={handleChange}
             name="password"
@@ -213,6 +217,7 @@ export default function EditEmployee({
             placeholder="Entre Your Password..."
             value={employee.password ?? ""}
             lable="Password"
+            isRequired={false}
           >
             <span
               onClick={() => setShowPassword((prev) => !prev)}
@@ -231,17 +236,6 @@ export default function EditEmployee({
 
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-6">
-            <button
-              type="submit"
-              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
-              style={{
-                backgroundColor: `var(--button-create)`,
-                border: `1px solid var(--border)`,
-              }}
-            >
-              {"Submit"}
-            </button>
-
             <Link
               href={"/employees"}
               className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
@@ -252,6 +246,16 @@ export default function EditEmployee({
             >
               Discard
             </Link>
+            <button
+              type="submit"
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: `var(--button-create)`,
+                border: `1px solid var(--border)`,
+              }}
+            >
+              {"Submit"}
+            </button>
           </div>
         </form>
       </div>

@@ -8,7 +8,7 @@ import LogoutButton from "./LogoutButton";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function NavBar() {
-  const { user, isLoading: IsLoadingUserRole } = useAuth();
+  const { user } = useAuth();
   const { isDark, toggleTheme } = useThemeToggle();
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();

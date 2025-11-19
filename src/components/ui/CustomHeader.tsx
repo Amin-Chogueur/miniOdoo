@@ -24,7 +24,7 @@ export default function CustomHeader({
 }: CustomHeaderProps) {
   return (
     <header
-      className="mb-6 rounded  sticky top-12 pt-6"
+      className="mb-6 rounded  sticky z-30 top-12 pt-6"
       style={{ backgroundColor: "var(--background)" }}
     >
       <h1 className="text-xl md:text-3xl font-bold text-center mb-5">
@@ -39,7 +39,7 @@ export default function CustomHeader({
           type="text"
           value={search}
           placeholder={placeholder}
-          className="p-2 rounded-lg border transition-colors outline-none"
+          className="p-2 w-[170px] md:w-[300px] rounded-lg border transition-colors outline-none"
           style={{
             backgroundColor: "var(--surface)",
             color: "var(--text-primary)",

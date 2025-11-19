@@ -42,13 +42,22 @@ export default function ToolCardToolCard({
   }
   return (
     <div
-      className="p-4 rounded-lg shadow-md  hover:shadow-xl"
+      className={` ${
+        role === Role.SUPER_ADMIN ? "h-[280px]" : "h-auto"
+      } p-2 relative z-0 rounded-lg shadow-md  hover:shadow-xl`}
       style={{
         backgroundColor: "var(--surface)",
         border: `1px solid var(--border)`,
       }}
     >
-      <h2 className="text-xl font-semibold mb- capitalize">{tool.name}</h2>
+      <h2 className="text-[18px] font-semibold mb- capitalize">
+        {tool.name}{" "}
+        {tool?.quantityTaken == tool.quantity ? (
+          <span className="text-red-500">(OUT)</span>
+        ) : (
+          0
+        )}
+      </h2>
       <p style={{ color: "var(--text-secondary)" }} className="mb-1">
         <strong>Reference:</strong> {tool.code}
       </p>
@@ -68,7 +77,7 @@ export default function ToolCardToolCard({
 
       {(role === Role.SUPER_ADMIN && position === Position.MANAGER) ||
       (role === Role.ADMIN && position === Position.STORE_KEEPER) ? (
-        <div className="flex gap-2">
+        <div className="flex justify-end gap-2 absolute bottom-2 right-2">
           <button
             onClick={handleDeleteTool}
             className="px-3 py-1 rounded text-white cursor-pointer"

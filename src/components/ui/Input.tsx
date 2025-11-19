@@ -8,6 +8,7 @@ type InputPropsType = {
   name: string;
   type: string;
   lable: string;
+  isRequired: boolean;
 };
 
 export default function Input({
@@ -18,11 +19,15 @@ export default function Input({
   name,
   type,
   lable,
+  isRequired,
 }: InputPropsType) {
   return (
     <div className="space-y-2 relative">
-      <label className="block text-lg font-medium ">{lable}</label>
+      <label className="block text-lg font-medium ">
+        {lable} {isRequired ? <span className="text-red-500">*</span> : null}
+      </label>
       <input
+        required={isRequired}
         onChange={handleChange}
         value={value}
         placeholder={placeholder}

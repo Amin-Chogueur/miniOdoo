@@ -34,11 +34,11 @@ export default function ToolMovementCard({
       <td className="px-3">{movement.employeeTakingTool}</td>
       <td className="px-3 ">{new Date(movement.takenAt).toLocaleString()}</td>
 
-      <td className="px-3">{movement.employeeReturningTool}</td>
+      <td className="px-3">{movement.employeeReturningTool || "-"}</td>
       <td className="px-4 py-2">
         {movement.returnedAt
           ? new Date(movement.returnedAt).toLocaleString()
-          : "Not returned"}
+          : "Not returned yet"}
       </td>
       <td className="px-3">{movement.returnedQuantity || 0}</td>
 
@@ -46,7 +46,7 @@ export default function ToolMovementCard({
         {movement.storekeeperReceiverName ? (
           <p>{movement.storekeeperReceiverName}</p>
         ) : (
-          <p className="text-sm text-gray-500 text-center">Not returned yet</p>
+          <p>Not returned yet</p>
         )}
       </td>
     </tr>

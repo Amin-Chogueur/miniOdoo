@@ -96,7 +96,9 @@ export default function EditTool({
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Full Name */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Name</label>
+            <label className="block text-lg font-medium">
+              Name <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.name ?? ""}
@@ -114,7 +116,9 @@ export default function EditTool({
           </div>
           {/* code */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Code</label>
+            <label className="block text-lg font-medium">
+              Code <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.code ?? ""}
@@ -133,7 +137,9 @@ export default function EditTool({
 
           {/* shelf */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Shelf</label>
+            <label className="block text-lg font-medium">
+              Shelf <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.shelf ?? ""}
@@ -149,7 +155,9 @@ export default function EditTool({
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Quantity</label>
+            <label className="block text-lg font-medium">
+              Quantity <span className="text-red-500">*</span>
+            </label>
             <input
               onChange={handleChange}
               value={tool.quantity ?? 0}
@@ -167,6 +175,16 @@ export default function EditTool({
 
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-6">
+            <Link
+              href={"/tools"}
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
+              style={{
+                backgroundColor: "var(--button-delete)",
+                border: `1px solid var(--border)`,
+              }}
+            >
+              Discard
+            </Link>
             <button
               disabled={updateToolMutation.isPending}
               type="submit"
@@ -178,17 +196,6 @@ export default function EditTool({
             >
               {updateToolMutation.isPending ? "Submitting..." : "Submit"}
             </button>
-
-            <Link
-              href={"/tools"}
-              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
-              style={{
-                backgroundColor: "var(--button-delete)",
-                border: `1px solid var(--border)`,
-              }}
-            >
-              Discard
-            </Link>
           </div>
         </form>
       </div>

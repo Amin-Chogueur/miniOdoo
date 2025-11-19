@@ -84,8 +84,9 @@ export default function NewEmployee() {
         <h1 className="text-3xl font-bold text-center mb-2 tracking-wide">
           Create New Employee
         </h1>
-        <p className="text-center text-sm opacity-70 mb-6">
-          Please fill in the information below to add a new staff member.
+        <p className="text-center text-md opacity-70 mb-6">
+          The fields marked with <span className="text-red-500">*</span> are
+          required.
         </p>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -97,6 +98,7 @@ export default function NewEmployee() {
             placeholder="Enter full name..."
             value={employee.fullName}
             lable="Full Name"
+            isRequired={true}
           />
           <Input
             handleChange={handleChange}
@@ -105,11 +107,14 @@ export default function NewEmployee() {
             placeholder="Enter Email..."
             value={employee.email}
             lable="Email"
+            isRequired={true}
           />
 
           {/* Position */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Position</label>
+            <label className="block text-lg font-medium">
+              Position <span className="text-red-500">*</span>
+            </label>
             <select
               onChange={handleChange}
               value={employee.position}
@@ -140,6 +145,7 @@ export default function NewEmployee() {
               type="date"
               value={employee.dateOfBirth}
               lable="Date of Birth"
+              isRequired={false}
             />
             <Input
               handleChange={handleChange}
@@ -147,12 +153,15 @@ export default function NewEmployee() {
               type="date"
               value={employee.dateOfStart}
               lable="Start Date"
+              isRequired={false}
             />
           </div>
 
           {/* Role */}
           <div className="space-y-2">
-            <label className="block text-lg font-medium">Role</label>
+            <label className="block text-lg font-medium">
+              Role <span className="text-red-500">*</span>
+            </label>
             <select
               onChange={handleChange}
               value={employee.role}
@@ -178,6 +187,7 @@ export default function NewEmployee() {
             placeholder="Entre Your Password..."
             value={employee.password}
             lable="Password"
+            isRequired={false}
           >
             <span
               onClick={() => setShowPassword((prev) => !prev)}
@@ -197,6 +207,16 @@ export default function NewEmployee() {
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-6">
             <button
+              type="button"
+              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
+              style={{
+                backgroundColor: "var(--button-delete)",
+                border: `1px solid var(--border)`,
+              }}
+            >
+              Discard
+            </button>
+            <button
               disabled={addEmployeeMutation.isPending}
               type="submit"
               className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
@@ -206,17 +226,6 @@ export default function NewEmployee() {
               }}
             >
               {addEmployeeMutation.isPending ? "Submitting..." : "Submit"}
-            </button>
-
-            <button
-              type="button"
-              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
-              style={{
-                backgroundColor: "var(--button-delete)",
-                border: `1px solid var(--border)`,
-              }}
-            >
-              Discard
             </button>
           </div>
         </form>

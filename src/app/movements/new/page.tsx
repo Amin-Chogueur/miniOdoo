@@ -80,7 +80,7 @@ export default function NewMovements() {
       takenAt: new Date().toISOString(),
       storekeeperGivenName: user?.username,
     };
-    console.log(newMovement);
+
     addMovementMutation.mutate(newMovement);
   }
 
@@ -152,7 +152,7 @@ export default function NewMovements() {
                 placeholder="Enter PIN..."
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="flex-1 px-4 py-3 rounded-lg outline-none text-base"
+                className="w-[170px] px-4 py-2 rounded-lg outline-none text-base"
                 style={{
                   backgroundColor: "var(--input-bg)",
                   border: `1px solid var(--border)`,
@@ -215,7 +215,7 @@ export default function NewMovements() {
                     }))
                   }
                   type="number"
-                  className="w-full px-4 py-3 rounded-lg outline-none text-base"
+                  className="w-full px-4 py-2 rounded-lg outline-none text-base"
                   style={{
                     backgroundColor: "var(--input-bg)",
                     border: "1px solid var(--border)",
@@ -232,7 +232,7 @@ export default function NewMovements() {
                   required
                   value={movement.employeeTakingTool}
                   readOnly
-                  className="w-full px-4 py-3 rounded-lg outline-none text-red-500 font-semibold"
+                  className="w-full px-4 py-2 rounded-lg outline-none text-red-500 font-semibold"
                   style={{
                     backgroundColor: "var(--input-bg)",
                     border: `1px solid var(--border)`,
@@ -247,7 +247,7 @@ export default function NewMovements() {
                   type="text"
                   value={user?.username || ""}
                   readOnly
-                  className="w-full px-4 py-3 rounded-lg outline-none text-base"
+                  className="w-full px-4 py-2 rounded-lg outline-none text-base"
                   style={{
                     backgroundColor: "var(--input-bg)",
                     border: `1px solid var(--border)`,
@@ -273,7 +273,7 @@ export default function NewMovements() {
                   }))
                 }
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg outline-none text-base resize-none"
+                className="w-full px-4 py-2 rounded-lg outline-none text-base resize-none"
                 style={{
                   backgroundColor: "var(--input-bg)",
                   border: `1px solid var(--border)`,
@@ -283,7 +283,7 @@ export default function NewMovements() {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-2">
               <button
                 disabled={
                   addMovementMutation.isPending ||

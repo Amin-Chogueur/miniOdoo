@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-100px)] opacity-80 flex absolute bg-black/50 backdrop-blur-sm z-50 inset-0">
+    <div className="min-h-[calc(100vh-100px)] opacity-80 flex absolute bg-black/50 backdrop-blur-xs z-50 inset-0">
       {/* Left section - background image */}
       <div className="hidden lg:flex relative w-1/2 items-center justify-center overflow-hidden">
         <Image
@@ -52,15 +52,17 @@ export default function ResetPasswordPage() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-xs"></div>
         <div className="relative z-10 text-center px-10">
-          <h2 className="text-4xl font-bold mb-4 text-white">
+          <h2 className="text-4xl font-bold mb-4 text-white flex gap-5 items-center justify-center">
             {" "}
-            Welcome to Tool Management App
+            Welcome to{" "}
+            <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center">
+              <span className="text-white font-bold text-4xl">MOA</span>
+            </div>
           </h2>
           <p className="text-gray-300 text-lg max-w-md mx-auto">
-            Manage your tools, employees, and movements efficiently in one
-            place.
+            Manage your tool movements efficiently in one place.
           </p>
         </div>
       </div>
