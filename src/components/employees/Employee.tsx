@@ -1,4 +1,4 @@
-import { Role } from "@/constants/constants";
+import { Position, Role } from "@/constants/constants";
 import { FormatDate } from "@/helpers/formatDate";
 
 import { deleteEmployee } from "@/query/employeesQuery";
@@ -12,9 +12,16 @@ import { toast } from "react-toastify";
 type EmployeePropsType = {
   employee: EmployeeType;
   role: string;
+  position: string;
+  currentUserEmail: string;
 };
 
-export default function Employee({ employee, role }: EmployeePropsType) {
+export default function Employee({
+  employee,
+  role,
+  currentUserEmail,
+  position,
+}: EmployeePropsType) {
   const [togglePin, setTogglePin] = useState(false);
   const queryClient = useQueryClient();
   // ✅ Mutation to update
@@ -38,7 +45,9 @@ export default function Employee({ employee, role }: EmployeePropsType) {
       deleteEmployeeMutation.mutate(employee._id!);
     }
   }
-
+  const isPinVisible =
+    currentUserEmail === employee.email &&
+    !(Position.STORE_KEEPER === position || Position.MANAGER === position);
   return (
     <div
       className={`${
@@ -77,9 +86,9 @@ export default function Employee({ employee, role }: EmployeePropsType) {
         }}
         className="mb-3"
       >
-        <strong>Role:</strong> {employee?.role}
+        <strong>Role: </strong> {employee?.role}
       </p>
-      {role === Role.SUPER_ADMIN ? (
+      {isPinVisible ? (
         <p
           style={{
             color: "var(--text-secondary)",

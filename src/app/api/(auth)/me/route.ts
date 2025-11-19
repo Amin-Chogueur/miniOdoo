@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface MyTokenPayload extends JwtPayload {
+  email: string;
   role: "Super Admin" | "Admin" | "User";
   position:
     | "Manager"
@@ -32,6 +33,7 @@ export async function GET(req: Request) {
     // 3. Return user object
     return NextResponse.json({
       user: {
+        email: decodedToken.email,
         role: decodedToken.role,
         position: decodedToken.position,
         username: decodedToken.username,

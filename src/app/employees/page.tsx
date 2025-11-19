@@ -13,7 +13,7 @@ import { useState } from "react";
 export default function Employees() {
   const { user, isLoading: IsLoadingUserRole } = useAuth();
   const [search, setSearch] = useState("");
-
+  console.log(user);
   const {
     data: employees,
     isLoading,
@@ -55,7 +55,13 @@ export default function Employees() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-1 ">
           {filterdEmployee?.map((employee) => (
-            <Employee role={user.role} key={employee._id} employee={employee} />
+            <Employee
+              role={user.role}
+              position={user.position}
+              currentUserEmail={user.email}
+              key={employee._id}
+              employee={employee}
+            />
           ))}
         </div>
       )}

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface MyTokenPayload extends JwtPayload {
+  email: string;
   role: "Super Admin" | "Admin" | "User";
   position:
     | "Manager"
@@ -28,8 +29,9 @@ export async function checkToken() {
     // 2. Decode the token
     const decodedToken = jwt.verify(token, TOKEN_SECRET!) as MyTokenPayload;
     const ROLE = decodedToken?.role;
+    const EMAIL = decodedToken?.email;
     const POSITION = decodedToken?.position;
-    return { ROLE, POSITION };
+    return { ROLE, POSITION, EMAIL };
   } catch (error) {
     console.error("Token verification error:", error);
     return false;

@@ -1,4 +1,4 @@
-import { Role } from "@/constants/constants";
+import { Position, Role } from "@/constants/constants";
 import { connectToDB } from "@/db/connectToDb";
 import Employee from "@/db/models/employeeModel";
 import { checkToken } from "@/helpers/checkToken";
@@ -96,16 +96,22 @@ export async function GET() {
         { status: 401 }
       );
     }
-    const isSuperAdmin = tokenData.ROLE === Role.SUPER_ADMIN;
+    const isSuperAdminOrStoreKeeper =
+      tokenData.ROLE === Role.SUPER_ADMIN ||
+      tokenData.POSITION === Position.STORE_KEEPER;
+
+    const currentUserEmail = tokenData.EMAIL;
 
     await connectToDB();
     let employees;
-    if (isSuperAdmin) {
-      employees = await Employee.find({}).sort({ createdAt: -1 });
-    } else {
+    if (isSuperAdminOrStoreKeeper) {
       employees = await Employee.find({})
+        .select("-password -pin")
+        .sort({ createdAt: -1 });
+    } else {
+      employees = await Employee.find({ email: currentUserEmail })
         .sort({ createdAt: -1 })
-        .select("-password -pin");
+        .select("-password");
     }
 
     return NextResponse.json(employees);
