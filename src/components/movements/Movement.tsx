@@ -30,8 +30,9 @@ export default function ToolMovementCard({
       </td>
       <td className="px-3">{movement.toolName}</td>
       <td className="px-3">{movement.takenQuantity}</td>
-      <td className="px-3">{movement.storekeeperGivenName}</td>
       <td className="px-3">{movement.employeeTakingTool}</td>
+      <td className="px-3">{movement.storekeeperGivenName}</td>
+
       <td className="px-3 ">{new Date(movement.takenAt).toLocaleString()}</td>
 
       <td className="px-3">{movement.employeeReturningTool || "-"}</td>

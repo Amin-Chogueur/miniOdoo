@@ -51,7 +51,7 @@ export default function Employee({
   return (
     <div
       className={`${
-        role === Role.SUPER_ADMIN ? "h-[280px]" : "h-fit"
+        role === Role.SUPER_ADMIN ? "h-[230px]" : "h-fit"
       } p-2  relative z-0 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200`}
       style={{
         backgroundColor: "var(--surface)",

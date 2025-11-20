@@ -129,7 +129,7 @@ export default function SignUpPage() {
             className="mt-6 text-center text-sm"
             style={{ color: "var(--text-secondary)" }}
           >
-            Already have an account?{" "}
+            Your account is already acitive ?{" "}
             <Link
               href="/signin"
               className="font-semibold"

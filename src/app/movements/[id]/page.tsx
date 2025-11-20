@@ -35,7 +35,10 @@ export default function MovementDetails({
       setErrorEmployee("Please provide the PIN first");
       return;
     }
-
+    if (pin.trim().length < 6) {
+      setErrorEmployee("Please provide a valide PIN, (6 degits)");
+      return;
+    }
     setLoading(true);
     setErrorEmployee(null);
     setEmployeeReturningTool("");
@@ -254,11 +257,12 @@ export default function MovementDetails({
                 <h3 className="text-xl font-semibold">Employee Lookup</h3>
                 <div className="flex gap-2">
                   <input
+                    maxLength={6}
                     type="password"
                     placeholder="Enter PIN..."
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
-                    className="flex-1 px-4 py-3 rounded-lg outline-none text-base"
+                    className="w-[170px]  px-4 py-2 rounded-lg outline-none text-base"
                     style={{
                       backgroundColor: "var(--input-bg)",
                       border: `1px solid var(--border)`,
@@ -268,7 +272,7 @@ export default function MovementDetails({
                   <button
                     onClick={getEmployeeNameFromDb}
                     disabled={loading}
-                    className="px-6 py-3 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    className="px-4 py-2 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                     style={{
                       backgroundColor: "var(--button-create)",
                       border: `1px solid var(--border)`,
@@ -289,7 +293,7 @@ export default function MovementDetails({
 
                 {employeeReturningTool && (
                   <div
-                    className="p-3 rounded-lg text-sm font-semibold "
+                    className="p-2 rounded-lg text-lg font-semibold "
                     style={{ backgroundColor: "var(--input-bg)" }}
                   >
                     Employee:{" "}
@@ -343,22 +347,23 @@ export default function MovementDetails({
                     }}
                   />
                 </div>
-
-                <button
-                  disabled={
-                    updateMovementMutation.isPending || !employeeReturningTool
-                  }
-                  type="submit"
-                  className="w-full md:w-auto px-8 py-3 rounded-lg text-white font-semibold shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-                  style={{
-                    backgroundColor: "var(--button-create)",
-                    border: `1px solid var(--border)`,
-                  }}
-                >
-                  {updateMovementMutation.isPending
-                    ? "Processing Return..."
-                    : "Submit Return"}
-                </button>
+                <div className="flex justify-end items-center">
+                  <button
+                    disabled={
+                      updateMovementMutation.isPending || !employeeReturningTool
+                    }
+                    type="submit"
+                    className="w-full md:w-auto px-6 py-2 rounded-lg text-white font-semibold shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{
+                      backgroundColor: "var(--button-create)",
+                      border: `1px solid var(--border)`,
+                    }}
+                  >
+                    {updateMovementMutation.isPending
+                      ? "Processing Return..."
+                      : "Submit Return"}
+                  </button>
+                </div>
               </form>
             </div>
           )}

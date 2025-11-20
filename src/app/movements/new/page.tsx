@@ -33,6 +33,10 @@ export default function NewMovements() {
       setError("Please provide the PIN first");
       return;
     }
+    if (pin.trim().length < 6) {
+      setError("Please provide a valide PIN, (6 degits)");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -148,6 +152,7 @@ export default function NewMovements() {
             </label>
             <div className="flex gap-2">
               <input
+                maxLength={6}
                 type="password"
                 placeholder="Enter PIN..."
                 value={pin}
@@ -162,7 +167,7 @@ export default function NewMovements() {
               <button
                 onClick={getEmployeeNameFromDb}
                 disabled={loading}
-                className="px-6 py-3 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                className="px-4 py-2 rounded-lg text-white font-medium shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   backgroundColor: "var(--button-create)",
                   border: `1px solid var(--border)`,
@@ -291,7 +296,7 @@ export default function NewMovements() {
                   !movement.employeeTakingTool
                 }
                 type="submit"
-                className="px-8 py-3 rounded-lg text-white font-semibold shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                className="px-6 py-2 rounded-lg text-white font-semibold shadow-lg hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   backgroundColor: "var(--button-create)",
                   border: `1px solid var(--border)`,

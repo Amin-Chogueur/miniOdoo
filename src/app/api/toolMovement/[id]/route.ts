@@ -70,7 +70,6 @@ export async function PATCH(
       takenQuantity,
       storekeeperGivenName,
       employeeTakingTool,
-
       storekeeperReceiverName,
       takenAt,
       toolName,
@@ -126,7 +125,6 @@ export async function PATCH(
         takenNote: `This is auto message for the new movement created for this tool, Mr ${employeeTakingTool} still have to gave back the remaining quantity of  ${toolName}. `,
         storekeeperGivenName,
         employeeTakingTool,
-        storekeeperReceiverName,
         takenAt,
         toolName,
       };
@@ -150,23 +148,3 @@ export async function PATCH(
     NextResponse.json({ message: "error edeting movement" }, { status: 500 });
   }
 }
-
-// export async function DELETE(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ id: string }> }
-// ) {
-//   try {
-//     const { id } = await params;
-//     await connectToDB();
-//     const job = await Job.findByIdAndDelete(id);
-//     if (job) {
-//       return NextResponse.json({
-//         job,
-//         message: "Server Responce: job deleted successfully ",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     NextResponse.json({ message: "error deleting job", status: 500 });
-//   }
-// }

@@ -3,16 +3,19 @@
 import ToolMovementCard from "@/components/movements/Movement";
 import { ToolMovementType } from "@/types/MovementType";
 import React, { useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { getAllMovements } from "@/query/movementQuery";
+import { deleteMovements, getAllMovements } from "@/query/movementQuery";
 import CustomHeader from "@/components/ui/CustomHeader";
 import NoResults from "@/components/ui/NoResults";
 import { useReactToPrint } from "react-to-print";
 import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
+import { FiLoader } from "react-icons/fi";
+import { Position, Role } from "@/constants/constants";
 
 export default function ToolMovements() {
+  const queryClient = useQueryClient();
   const { user, isLoading: IsLoadingUserRole } = useAuth();
   const componentRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
@@ -31,18 +34,42 @@ export default function ToolMovements() {
     queryFn: getAllMovements,
     staleTime: 600000,
   });
+
+  const deleteMovementsMutation = useMutation({
+    mutationFn: deleteMovements,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["movements"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
+    },
+    onError: (error) => {
+      console.error("Failed to delete  movements", error);
+    },
+  });
+
+  function handleDeleteReturnedToolMovements() {
+    const confirm = window.confirm(
+      "Are you sure you want to delete all returned tool movements? "
+    );
+    if (confirm) {
+      deleteMovementsMutation.mutate();
+    }
+  }
+
   const filtredToolMovementsList = toolMovementsList?.filter((movement) => {
-    const unvailableOnly = showUnavailableOnly
+    const searchText = search.trim().toLowerCase();
+
+    // 1) Unavailable tools only (storekeeperReceiverName is null)
+    const isUnavailable = showUnavailableOnly
       ? movement.storekeeperReceiverName === null
       : true;
-    const searchedMovement =
-      search.trim() === ""
-        ? true
-        : movement.toolName
-            ?.toLowerCase()
-            .includes(search.trim().toLowerCase());
 
-    return unvailableOnly && searchedMovement;
+    // 2) Search filter (match tool OR employee)
+    const matchesSearch =
+      searchText === "" ||
+      movement.toolName?.toLowerCase().includes(searchText) ||
+      movement.employeeTakingTool?.toLowerCase().includes(searchText);
+
+    return isUnavailable && matchesSearch;
   });
 
   if (isLoading || IsLoadingUserRole) return <LoadingSpinner />;
@@ -75,13 +102,28 @@ export default function ToolMovements() {
           />
           Taken only
         </label>
-        {filtredToolMovementsList && filtredToolMovementsList?.length > 0 ? (
-          <button
-            onClick={handlePrint}
-            className="hidden md:inline text-sm cursor-pointer bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-white transition-colors"
-          >
-            <span className="hidden md:inline"> Print</span>
-          </button>
+        {user.position === Position.STORE_KEEPER &&
+        filtredToolMovementsList &&
+        filtredToolMovementsList?.length > 0 ? (
+          <div className="flex items-center gap-5">
+            {" "}
+            <button
+              disabled={deleteMovementsMutation.isPending}
+              onClick={handleDeleteReturnedToolMovements}
+              className="md:flex items-center gap-1 hidden  text-sm cursor-pointer bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
+            >
+              {deleteMovementsMutation.isPending && (
+                <FiLoader className="animate-spin" />
+              )}
+              <span className="hidden md:inline">Delete Movements</span>
+            </button>
+            <button
+              onClick={handlePrint}
+              className="hidden md:inline text-sm cursor-pointer bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-white transition-colors"
+            >
+              <span className="hidden md:inline"> Print</span>
+            </button>
+          </div>
         ) : null}
       </div>
 
@@ -118,8 +160,9 @@ export default function ToolMovements() {
                 <th className="px-3 py-1 text-left">
                   Qte <br /> Taken
                 </th>
-                <th className="px-3 py-1 text-left">Storekeeper (Given)</th>
+
                 <th className="px-3 py-1 text-left">Employee Taker</th>
+                <th className="px-3 py-1 text-left">Storekeeper (Given)</th>
                 <th className="px-3 py-1 text-left">Taken At</th>
                 <th className="px-3 py-1 text-left">Employee Returner</th>
                 <th className="px-3 py-1 text-left">Returned At</th>

@@ -21,8 +21,7 @@ export async function POST(req: NextRequest) {
     if (!user && email !== SUPER_ADMIN_EMAIL) {
       return NextResponse.json(
         {
-          message:
-            "Oops! you are not allowed to create an account in this app yet.",
+          message: "Oops! you do not have  an account in this app yet.",
         },
         { status: 400 }
       );
@@ -31,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (user && user.password) {
       return NextResponse.json(
         {
-          message: "Oops! you already have an account, Please Sign in.",
+          message: "Oops! your account is already active, Please Sign in.",
         },
         { status: 400 }
       );
@@ -51,7 +50,7 @@ export async function POST(req: NextRequest) {
       };
       await Employee.create(admin);
       return NextResponse.json(
-        { message: "Super Admin account created successfully" },
+        { message: "Super Admin account activited successfully" },
         { status: 200 }
       );
     }
@@ -59,7 +58,7 @@ export async function POST(req: NextRequest) {
     await Employee.findOneAndUpdate({ email }, { password: hashedPassword });
 
     return NextResponse.json(
-      { message: "Account created successfully!" },
+      { message: "Account activited successfully!" },
       { status: 200 }
     );
   } catch (error) {

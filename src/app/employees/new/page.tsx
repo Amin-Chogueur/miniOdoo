@@ -207,8 +207,9 @@ export default function NewEmployee() {
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-6">
             <button
+              onClick={() => route.push("/employees")}
               type="button"
-              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
+              className="px-3 py-1 rounded text-white font-semibold shadow hover:opacity-90 transition cursor-pointer"
               style={{
                 backgroundColor: "var(--button-delete)",
                 border: `1px solid var(--border)`,
@@ -219,7 +220,7 @@ export default function NewEmployee() {
             <button
               disabled={addEmployeeMutation.isPending}
               type="submit"
-              className="px-3 py-1 rounded-xl text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
+              className="px-3 py-1 rounded text-white font-semibold shadow hover:opacity-90 transition cursor-pointer disabled:cursor-not-allowed"
               style={{
                 backgroundColor: `var(--button-create)`,
                 border: `1px solid var(--border)`,

@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
     if (!user.password) {
       return NextResponse.json(
-        { message: "You need to Create your account first, please Sign Up." },
+        { message: "You need to activite your account first, please Sign Up." },
         { status: 400 }
       );
     }

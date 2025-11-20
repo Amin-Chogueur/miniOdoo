@@ -84,3 +84,19 @@ export async function updateMovement({
     }
   }
 }
+
+export async function deleteMovements() {
+  try {
+    const res = await axios.delete("/api/toolMovement");
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error:", error.message);
+      throw new Error(
+        error.response?.data?.message || "Failed to delete movements"
+      );
+    } else {
+      throw new Error("An unknown error occurred while deleting movements");
+    }
+  }
+}

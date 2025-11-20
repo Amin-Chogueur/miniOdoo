@@ -87,3 +87,39 @@ export async function GET() {
     NextResponse.json({ message: "error fetching movement" }, { status: 500 });
   }
 }
+
+export async function DELETE() {
+  try {
+    const tokenData = await checkToken();
+
+    if (!tokenData) {
+      return NextResponse.json(
+        { message: "Invalid token or not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    const { ROLE, POSITION } = tokenData;
+
+    if (ROLE !== Role.USER && POSITION !== Position.STORE_KEEPER) {
+      return NextResponse.json(
+        { message: "You are Not the StoreKeeper🤨" },
+        { status: 403 }
+      );
+    }
+    await connectToDB();
+    await ToolMovement.deleteMany({
+      returnedAt: { $ne: null },
+    });
+
+    return NextResponse.json({
+      message: "Delete only the  returned tool movements successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    NextResponse.json(
+      { message: "error deleting returned tool movements" },
+      { status: 500 }
+    );
+  }
+}
