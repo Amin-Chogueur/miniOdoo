@@ -61,9 +61,7 @@ export default function CustomHeader({
           </Link>
         ) : null}
 
-        {role === Role.SUPER_ADMIN &&
-        position === Position.MANAGER &&
-        path !== "/movements/new" ? (
+        {role === Role.SUPER_ADMIN && path !== "/movements/new" ? (
           <Link
             href={path}
             className="px-3 py-1 rounded text-white cursor-pointer"
