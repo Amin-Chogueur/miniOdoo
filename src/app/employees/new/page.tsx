@@ -34,8 +34,9 @@ export default function NewEmployee() {
 
   const addEmployeeMutation = useMutation({
     mutationFn: addEmployee,
-    onSuccess: () => {
+    onSuccess: (data) => {
       // ✅ Refresh movements list
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
       // ✅ Reset fields
@@ -128,7 +129,6 @@ export default function NewEmployee() {
               }}
             >
               <option value="">Select position</option>
-              <option value="Manager">Manager</option>
               <option value="Mechanical Engineer">Mechanical Engineer</option>
               <option value="Electrical Engineer">Electrical Engineer</option>
               <option value="StoreKeeper">StoreKeeper</option>
@@ -175,7 +175,6 @@ export default function NewEmployee() {
               }}
             >
               <option value="">Select role</option>
-              <option value="Super Admin">Super Admin</option>
               <option value="Admin">Admin</option>
               <option value="User">User</option>
             </select>

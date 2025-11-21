@@ -12,7 +12,8 @@ import { useReactToPrint } from "react-to-print";
 import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import { FiLoader } from "react-icons/fi";
-import { Position, Role } from "@/constants/constants";
+import { Position } from "@/constants/constants";
+import { toast } from "react-toastify";
 
 export default function ToolMovements() {
   const queryClient = useQueryClient();
@@ -37,7 +38,8 @@ export default function ToolMovements() {
 
   const deleteMovementsMutation = useMutation({
     mutationFn: deleteMovements,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["movements"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
     },
@@ -55,6 +57,10 @@ export default function ToolMovements() {
     }
   }
 
+  const hasNotReturnedMovements = React.useMemo(() => {
+    return toolMovementsList?.some((movement) => movement.returnedAt !== null);
+  }, [toolMovementsList]);
+  console.log(hasNotReturnedMovements);
   const filtredToolMovementsList = toolMovementsList?.filter((movement) => {
     const searchText = search.trim().toLowerCase();
 
@@ -102,26 +108,35 @@ export default function ToolMovements() {
           />
           Taken only
         </label>
+
         {user.position === Position.STORE_KEEPER &&
-        filtredToolMovementsList &&
-        filtredToolMovementsList?.length > 0 ? (
+        toolMovementsList &&
+        toolMovementsList.length > 0 ? (
           <div className="flex items-center gap-5">
-            {" "}
-            <button
-              disabled={deleteMovementsMutation.isPending}
-              onClick={handleDeleteReturnedToolMovements}
-              className="md:flex items-center gap-1 hidden  text-sm cursor-pointer bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-white transition-colors disabled:bg-gray-600 disabled:cursor-not-allowed"
-            >
-              {deleteMovementsMutation.isPending && (
-                <FiLoader className="animate-spin" />
-              )}
-              <span className="hidden md:inline">Delete Movements</span>
-            </button>
+            {hasNotReturnedMovements && (
+              <button
+                disabled={deleteMovementsMutation.isPending}
+                onClick={handleDeleteReturnedToolMovements}
+                className="md:flex items-center gap-1 hidden
+          text-sm cursor-pointer bg-red-500 hover:bg-red-600 px-3 py-1
+          rounded text-white transition-colors disabled:bg-gray-600
+          disabled:cursor-not-allowed"
+              >
+                {deleteMovementsMutation.isPending && (
+                  <FiLoader className="animate-spin" />
+                )}
+                <span className="hidden md:inline">
+                  Delete Returned Movements
+                </span>
+              </button>
+            )}
+
             <button
               onClick={handlePrint}
-              className="hidden md:inline text-sm cursor-pointer bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-white transition-colors"
+              className="hidden md:inline text-sm cursor-pointer bg-blue-600 
+        hover:bg-blue-500 px-3 py-1 rounded text-white transition-colors"
             >
-              <span className="hidden md:inline"> Print</span>
+              <span className="hidden md:inline">Print</span>
             </button>
           </div>
         ) : null}

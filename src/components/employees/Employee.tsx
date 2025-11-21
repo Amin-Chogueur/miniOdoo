@@ -47,7 +47,7 @@ export default function Employee({
   }
   const isPinVisible =
     currentUserEmail === employee.email &&
-    !(Position.STORE_KEEPER === position || Position.MANAGER === position);
+    !(Position.STORE_KEEPER === position);
   return (
     <div
       className={`${

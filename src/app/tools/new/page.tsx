@@ -26,7 +26,8 @@ export default function NewEmployee() {
 
   const addToolMutation = useMutation({
     mutationFn: addTool,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      toast.success(data.message);
       // ✅ Refresh movements list
       queryClient.invalidateQueries({ queryKey: ["tools"] });
 

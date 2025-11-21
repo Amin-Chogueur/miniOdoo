@@ -18,14 +18,12 @@ export async function GET(
       );
     }
 
-    const { ROLE, POSITION } = tokenData;
+    const { ROLE } = tokenData;
     const isSuperAdmin = ROLE === Role.SUPER_ADMIN;
-    const isAdminStoreKeeper =
-      ROLE === Role.ADMIN && POSITION === Position.STORE_KEEPER;
 
-    if (!isSuperAdmin && !isAdminStoreKeeper) {
+    if (!isSuperAdmin) {
       return NextResponse.json(
-        { message: "You are Not the Super Admin or the Storekeeper Admin🤨" },
+        { message: "You are Not the Super Admin 🤨" },
         { status: 403 }
       );
     }

@@ -8,7 +8,7 @@ import LogoutButton from "./LogoutButton";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function NavBar() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { isDark, toggleTheme } = useThemeToggle();
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -30,13 +30,16 @@ export default function NavBar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-3">
-        <div
+        <Link
+          href={"/"}
           className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg"
           style={{ backgroundColor: "var(--accent)", color: "#fff" }}
         >
           MOA
-        </div>
-        {user ? (
+        </Link>
+        {isLoading ? (
+          <p className="text-xs text-center">Loading...</p>
+        ) : user ? (
           <p className="text-xs text-center">
             Hi Mr {user?.username} <br />
             <span className="text-gray-400">

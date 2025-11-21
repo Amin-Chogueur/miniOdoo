@@ -1,4 +1,4 @@
-import { Position, Role } from "@/constants/constants";
+import { Role } from "@/constants/constants";
 import { connectToDB } from "@/db/connectToDb";
 import Tool from "@/db/models/toolModel";
 import { checkToken } from "@/helpers/checkToken";
@@ -17,14 +17,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { ROLE, POSITION } = tokenData;
+    const { ROLE } = tokenData;
     const isSuperAdmin = ROLE === Role.SUPER_ADMIN;
-    const isAdminStoreKeeper =
-      ROLE === Role.ADMIN && POSITION === Position.STORE_KEEPER;
 
-    if (!isSuperAdmin && !isAdminStoreKeeper) {
+    if (!isSuperAdmin) {
       return NextResponse.json(
-        { message: "You are Not the Super Admin or the Storekeeper Admin🤨" },
+        { message: "You are Not the Super Admin 🤨" },
         { status: 403 }
       );
     }

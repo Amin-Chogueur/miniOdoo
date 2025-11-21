@@ -8,6 +8,7 @@ import { addMovement, fetchEmployeeByPin } from "@/query/movementQuery";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { toast } from "react-toastify";
 
 const initialState = {
   toolName: "",
@@ -62,7 +63,8 @@ export default function NewMovements() {
 
   const addMovementMutation = useMutation({
     mutationFn: addMovement,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["movements"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
       queryClient.invalidateQueries({ queryKey: ["tools"] });

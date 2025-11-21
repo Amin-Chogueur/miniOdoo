@@ -75,8 +75,7 @@ export default function ToolCardToolCard({
         {tool.quantity - (tool?.quantityTaken || 0)}
       </p>
 
-      {(role === Role.SUPER_ADMIN && position === Position.MANAGER) ||
-      (role === Role.ADMIN && position === Position.STORE_KEEPER) ? (
+      {role === Role.SUPER_ADMIN ? (
         <div className="flex justify-end gap-2 absolute bottom-2 right-2">
           <button
             onClick={handleDeleteTool}

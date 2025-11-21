@@ -70,7 +70,6 @@ export async function PATCH(
       takenQuantity,
       storekeeperGivenName,
       employeeTakingTool,
-      storekeeperReceiverName,
       takenAt,
       toolName,
     } = updatedMovement;
@@ -100,7 +99,7 @@ export async function PATCH(
       if (movement) {
         return NextResponse.json({
           movement,
-          message: "Movement edited successfully",
+          message: "A tool returned  successfully",
         });
       }
     }
@@ -139,7 +138,7 @@ export async function PATCH(
       if (movement && newMovement) {
         return NextResponse.json({
           movement,
-          message: "Movement edited successfully",
+          message: "A tool returned successfully",
         });
       }
     }

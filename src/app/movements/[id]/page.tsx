@@ -12,6 +12,7 @@ import {
 } from "@/query/movementQuery";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "react-toastify";
 
 export default function MovementDetails({
   params,
@@ -73,7 +74,8 @@ export default function MovementDetails({
 
   const updateMovementMutation = useMutation({
     mutationFn: updateMovement,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["movements"] });
       queryClient.invalidateQueries({ queryKey: ["movement", id] });
       queryClient.invalidateQueries({ queryKey: ["tools"] });
